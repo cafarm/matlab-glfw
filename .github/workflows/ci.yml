@@ -24,7 +24,16 @@ jobs:
             wayland-protocols \
             libwayland-dev \
             libxkbcommon-dev \
-            libegl1-mesa-dev
+            libegl1-mesa-dev \
+            libxrandr-dev \
+            libxinerama-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libxext-dev \
+            libgl1-mesa-dev \
+            libwayland-bin \
+            xorg-dev \
+            libgl1
             
       - name: Setup MATLAB
         uses: matlab-actions/setup-matlab@v1
