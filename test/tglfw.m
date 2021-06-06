@@ -6,7 +6,8 @@ classdef tglfw < matlab.unittest.TestCase
                 loadlibrary("libglfw", "glfw3");
             end
             r = calllib("libglfw", "glfwInit");
-            testCase.fatalAssertTrue(logical(r));
+            [code,desc] = calllib("libglfw", "glfwGetError", {});
+            testCase.fatalAssertTrue(logical(r), sprintf("%i:%s",code,strjoin(desc)));
         end
     end
     
