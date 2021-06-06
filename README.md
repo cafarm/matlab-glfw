@@ -1,2 +1,2 @@
 # matlab-glfw
-GLFW bindings for MATLAB
+[GLFW](https://www.glfw.org) bindings for MATLAB
