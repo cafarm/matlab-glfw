@@ -1,0 +1,15 @@
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@0
+jobs:
+  build:
+    machine:
+      image: 'ubuntu-2004:202104-01'
+    steps:
+      - checkout
+      - run:
+          name: Install GLFW
+          command: |
+            sudo apt-get update && sudo apt-get install libglfw3-dev
+      - matlab/install
+      - matlab/run-tests
