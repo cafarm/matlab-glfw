@@ -12,11 +12,9 @@ jobs:
           command: |
             sudo apt-get update && sudo apt-get install xorg-dev
             git clone --depth 1 --branch 3.3.4 https://github.com/glfw/glfw.git
-            mkdir -p deps/glfw/glnxa64
-            cp -r glfw/include deps/glfw/include
-            cd deps/glfw/glnxa64
-            cmake -DBUILD_SHARED_LIBS=ON ../../../glfw
-            make
+            cd glfw
+            cmake -DCMAKE_INSTALL_PREFIX=../deps/glfw/glnxa64 -DBUILD_SHARED_LIBS=ON .
+            make all install
       - matlab/install
       - matlab/run-tests:
           source-folder: src

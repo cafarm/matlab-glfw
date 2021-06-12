@@ -10,8 +10,8 @@ end
 
 function p = libglfwPath()
 rootFolder = fileparts(fileparts(mfilename("fullpath")));
-glfwFolder = fullfile(rootFolder, "deps", "glfw");
-libFolder = fullfile(glfwFolder, lower(computer), "src");
+glfwFolder = fullfile(rootFolder, "deps", "glfw", lower(computer));
+libFolder = fullfile(glfwFolder, "lib");
 includeFolder = fullfile(glfwFolder, "include", "GLFW");
 p = [libFolder includeFolder];
 end
