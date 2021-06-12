@@ -3,6 +3,8 @@ if libisloaded("libglfw")
     return;
 end
 addPathIfNecessary(libglfwPath);
+warnStruct = warning("off", "MATLAB:loadlibrary:TypeNotFound");
+restoreWarn = onCleanup(@()warning(warnStruct));
 loadlibrary("libglfw", "glfw3");
 end
 
