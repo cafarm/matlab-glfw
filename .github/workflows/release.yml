@@ -8,7 +8,7 @@ defaults:
     shell: bash
   
 jobs:
-  build:
+  build-glfw:
     runs-on: ${{ matrix.os }}
     
     strategy:
@@ -40,3 +40,34 @@ jobs:
         with:
           path: ${{ matrix.computer }}
           key: ${{ matrix.computer }}
+  
+  build-matlab-glfw:
+    runs-on: ubuntu-latest
+    needs: [build-glfw]
+    
+    steps:
+      - name: Checkout matlab-glfw
+        uses: actions/checkout@v2
+      
+      - uses: actions/cache@v2
+        with:
+          path: deps/glfw/glnxa64
+          key: glnxa64
+      
+      - uses: actions/cache@v2
+        with:
+          path: deps/glfw/maci64
+          key: maci64
+          
+      - uses: actions/cache@v2
+        with:
+          path: deps/glfw/win64
+          key: win64
+          
+      - run: zip matlab-glfw.zip .
+      
+      - uses: actions/upload-artifacts@v2
+        with:
+          name: matlab-glfw
+          path: matlab-glfw.zip
+          
