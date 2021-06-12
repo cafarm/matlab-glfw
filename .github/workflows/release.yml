@@ -35,4 +35,5 @@ jobs:
           git clone --depth 1 --branch 3.3.4 https://github.com/glfw/glfw.git
           cd glfw
           cmake -DCMAKE_INSTALL_PREFIX=../deps/glfw/${{ matrix.computer }} -DBUILD_SHARED_LIBS=ON .
-          make all install
+          cmake --build .
+          cmake --install .
