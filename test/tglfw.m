@@ -62,11 +62,3 @@ classdef tglfw < matlab.unittest.TestCase
         end
     end
 end
-
-function f = PathFixture(varargin)
-f = matlab.unittest.fixtures.PathFixture(varargin{:});
-end
-
-function p = thisFolder()
-p = fileparts(mfilename("fullpath"));
-end
