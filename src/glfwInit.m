@@ -1,6 +1,4 @@
 function success = glfwInit()
-if ~libisloaded("libglfw")
-    loadlibrary("libglfw", "glfw3");
-end
+loadLibglfw();
 success = calllib("libglfw", "glfwInit");
 end

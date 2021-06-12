@@ -19,3 +19,4 @@ jobs:
             cd ..
       - matlab/install
       - matlab/run-tests
+          source-folder: src
