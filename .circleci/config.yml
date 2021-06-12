@@ -8,15 +8,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install GLFW
+          name: Compile GLFW
           command: |
             sudo apt-get update && sudo apt-get install xorg-dev
             git clone --depth 1 --branch 3.3.4 https://github.com/glfw/glfw.git
-            cd glfw
-            cmake -DBUILD_SHARED_LIBS=ON .
+            mkdir -p deps/glfw/glnxa64
+            cp -r glfw/include deps/glfw/include
+            cd deps/glfw/glnxa64
+            cmake -DBUILD_SHARED_LIBS=ON ../../../glfw
             make
-            sudo make install
-            cd ..
       - matlab/install
       - matlab/run-tests:
           source-folder: src

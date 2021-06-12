@@ -5,19 +5,15 @@ end
 addPathIfNecessary(libglfwPath);
 warnStruct = warning("off", "MATLAB:loadlibrary:TypeNotFound");
 restoreWarn = onCleanup(@()warning(warnStruct));
-loadlibrary("libglfw", "glfw3");
+loadlibrary("libglfw", "glfw3.h");
 end
 
 function p = libglfwPath()
-if ismac
-    error("macOS not yet supported");
-elseif isunix
-    p = ["/usr/local/lib","/usr/local/include/GLFW"];
-elseif ispc
-    error("Windows not yet supported");
-else
-    error("Platform not supported");
-end
+rootFolder = fileparts(fileparts(mfilename("fullpath")));
+glfwFolder = fullfile(rootFolder, "deps", "glfw");
+libFolder = fullfile(glfwFolder, lower(computer), "src");
+includeFolder = fullfile(glfwFolder, "include", "GLFW");
+p = [libFolder includeFolder];
 end
 
 function addPathIfNecessary(paths)
