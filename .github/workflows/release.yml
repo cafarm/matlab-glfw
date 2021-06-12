@@ -31,10 +31,6 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
             sudo apt-get update && sudo apt-get install xorg-dev
-          elseif [ "$RUNNER_OS" == "macOS" ]; then
-          
-          elseif [ "$RUNNER_OS" == "Windows" ]; then
-          
           fi
           git clone --depth 1 --branch 3.3.4 https://github.com/glfw/glfw.git
           cd glfw
