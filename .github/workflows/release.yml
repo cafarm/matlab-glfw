@@ -38,7 +38,7 @@ jobs:
       - name: Store GLFW binaries
         uses: actions/upload-artifact@v2
         with:
-          path: ${{ matrix.computer }}
+          path: glfw/${{ matrix.computer }}
   
   build-matlab-glfw:
     runs-on: ubuntu-latest
