@@ -6,7 +6,7 @@ classdef tglfw < matlab.unittest.TestCase
             success = glfwInit();
             if ~success
                 [code,desc] = glfwGetError();
-                testCase.fatalAssertFail(sprintf("%i:%s",code,strjoin(desc)));
+                testCase.fatalAssertFail(sprintf("%i:%s",code,desc));
             end
         end
     end
@@ -24,6 +24,15 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyNotEmpty(major);
             testCase.verifyNotEmpty(minor);
             testCase.verifyNotEmpty(rev);
+        end
+        
+        function createWindow(testCase)
+            window = glfwCreateWindow(640, 480, "Hello World");
+            if isNull(window)
+                [code,desc] = glfwGetError();
+                testCase.fatalAssertFail(sprintf("%i:%s",code,desc));
+            end
+            glfwDestroyWindow(window);
         end
     end
 end
