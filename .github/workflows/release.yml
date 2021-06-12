@@ -35,11 +35,10 @@ jobs:
           cmake -DCMAKE_INSTALL_PREFIX=${{ matrix.computer }} -DBUILD_SHARED_LIBS=ON .
           cmake --build . --target install
       
-      - name: Cache GLFW binaries
-        uses: actions/cache@v2
+      - name: Store GLFW binaries
+        uses: actions/upload-artifact@v2
         with:
           path: ${{ matrix.computer }}
-          key: ${{ github.sha }}-${{ matrix.computer }}
   
   build-matlab-glfw:
     runs-on: ubuntu-latest
@@ -49,20 +48,20 @@ jobs:
       - name: Checkout matlab-glfw
         uses: actions/checkout@v2
       
-      - uses: actions/cache@v2
+      - uses: actions/download-artifact@v2
         with:
-          path: .
-          key: ${{ github.sha }}-glnxa64
+          name: glnxa64
+          path: deps/glfw/glnxa64
       
-      - uses: actions/cache@v2
+      - uses: actions/download-artifact@v2
         with:
-          path: maci64
-          key: ${{ github.sha }}-maci64
+          name: maci64
+          path: deps/glfw/maci64
           
-      - uses: actions/cache@v2
+      - uses: actions/download-artifact@v2
         with:
+          name: win64
           path: deps/glfw/win64
-          key: ${{ github.sha }}-win64
           
       - run: zip -r matlab-glfw.zip .
       
