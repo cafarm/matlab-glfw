@@ -50,17 +50,17 @@ jobs:
       
       - uses: actions/download-artifact@v2
         with:
-          name: glnxa64
+          name: glfw/glnxa64
           path: deps/glfw/glnxa64
       
       - uses: actions/download-artifact@v2
         with:
-          name: maci64
+          name: glfw/maci64
           path: deps/glfw/maci64
           
       - uses: actions/download-artifact@v2
         with:
-          name: win64
+          name: glfw/win64
           path: deps/glfw/win64
           
       - run: zip -r matlab-glfw.zip .
