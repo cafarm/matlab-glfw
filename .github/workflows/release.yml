@@ -25,8 +25,6 @@ jobs:
             computer: win64
     
     steps:
-      - uses: actions/checkout@v2
-      
       - name: Compile GLFW
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
@@ -34,6 +32,11 @@ jobs:
           fi
           git clone --depth 1 --branch 3.3.4 https://github.com/glfw/glfw.git
           cd glfw
-          cmake -DCMAKE_INSTALL_PREFIX=../deps/glfw/${{ matrix.computer }} -DBUILD_SHARED_LIBS=ON .
-          cmake --build .
-          cmake --install .
+          cmake -DCMAKE_INSTALL_PREFIX=${{ matrix.computer }} -DBUILD_SHARED_LIBS=ON .
+          cmake --build . --target install
+      
+      - name: Cache GLFW binaries
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.computer }}
+          key: ${{ matrix.computer }}
