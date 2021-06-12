@@ -1,7 +1,7 @@
 classdef tglfw < matlab.unittest.TestCase
     methods (TestClassSetup)
         function init(testCase)
-            testCase.applyFixture(PathFixture(["/usr/lib/x86_64-linux-gnu","/usr/include/GLFW"]));
+            testCase.applyFixture(PathFixture(["/usr/local/lib","/usr/local/include/GLFW"]));
             if ~libisloaded("libglfw")
                 loadlibrary("libglfw", "glfw3");
             end
