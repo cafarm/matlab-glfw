@@ -18,5 +18,5 @@ jobs:
             sudo make install
             cd ..
       - matlab/install
-      - matlab/run-tests
+      - matlab/run-tests:
           source-folder: src
