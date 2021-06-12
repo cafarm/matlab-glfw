@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  
+defaults:
+  run:
+    shell: bash
+  
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            computer: glnxa64
+          
+          - os: macos-latest
+            computer: maci64
+          
+          - os: windows-latest
+            computer: win64
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Compile GLFW
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt-get update && sudo apt-get install xorg-dev
+          elseif [ "$RUNNER_OS" == "macOS" ]; then
+          
+          elseif [ "$RUNNER_OS" == "Windows" ]; then
+          
+          fi
+          git clone --depth 1 --branch 3.3.4 https://github.com/glfw/glfw.git
+          cd glfw
+          cmake -DCMAKE_INSTALL_PREFIX=../deps/glfw/${{ matrix.computer }} -DBUILD_SHARED_LIBS=ON .
+          make all install
