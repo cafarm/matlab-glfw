@@ -39,7 +39,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ matrix.computer }}
-          key: ${{ matrix.computer }}
+          key: ${{ github.sha }}-${{ matrix.computer }}
   
   build-matlab-glfw:
     runs-on: ubuntu-latest
@@ -52,17 +52,17 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: deps/glfw/glnxa64
-          key: glnxa64
+          key: ${{ github.sha }}-glnxa64
       
       - uses: actions/cache@v2
         with:
           path: deps/glfw/maci64
-          key: maci64
+          key: ${{ github.sha }}-maci64
           
       - uses: actions/cache@v2
         with:
           path: deps/glfw/win64
-          key: win64
+          key: ${{ github.sha }}-win64
           
       - run: zip -r matlab-glfw.zip .
       
