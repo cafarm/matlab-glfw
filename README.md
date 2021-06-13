@@ -1,8 +1,8 @@
 # matlab-glfw [![cafarm](https://circleci.com/gh/cafarm/matlab-glfw.svg?style=svg)](https://app.circleci.com/pipelines/github/cafarm/matlab-glfw)
 Work-in-progress [GLFW](https://www.glfw.org) bindings for MATLAB.
 
-## Pre-packaged toolbox
-A pre-packaged toolbox including pre-compiled GLFW binaries for Linux, macOS, and Windows is available via [GitHub releases](https://github.com/cafarm/matlab-glfw/releases/latest). Find "matlab-glfw.mltbx" located under the release assets.
+## Toolbox
+A toolbox including pre-compiled GLFW binaries for Linux, macOS, and Windows is available via [GitHub releases](https://github.com/cafarm/matlab-glfw/releases/latest). Find "matlab-glfw.mltbx" located under the release assets.
 
 ## Example
 Below is a short example of setting up a window and OpenGL context with GLFW in MATLAB. This example was ported from the [GLFW documentation](https://www.glfw.org/documentation.html).
