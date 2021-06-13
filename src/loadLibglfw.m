@@ -10,7 +10,7 @@ if ispc
 else
     libName = "libglfw";
 end
-loadlibrary(libName, "glfw3.h", "alias", "libglfw");
+[~,~] = loadlibrary(libName, "glfw3.h", "alias", "libglfw");
 end
 
 function p = libglfwPath()
