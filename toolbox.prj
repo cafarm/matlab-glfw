@@ -7,7 +7,7 @@
     <param.summary />
     <param.description />
     <param.screenshot />
-    <param.version>1.0</param.version>
+    <param.version>0.0.0.0</param.version>
     <param.output>${PROJECT_ROOT}/matlab-glfw.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -21,7 +21,9 @@ glfw
 tests
 .gitignore
 getdeps.sh
-README.md</param.exclude.filters>
+README.md
+package.m
+*.mltbx</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
@@ -57,7 +59,6 @@ README.md</param.exclude.filters>
       <param.summary />
       <param.description />
       <param.screenshot />
-      <param.version />
       <param.output />
       <param.products.name />
       <param.products.id />
@@ -106,7 +107,37 @@ README.md</param.exclude.filters>
     <matlab>
       <root>/Applications/MATLAB_R2021a.app</root>
       <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
       </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
     </matlab>
     <platform>
       <unix>true</unix>
