@@ -67,11 +67,9 @@ jobs:
         with:
           name: win64
           path: deps/glfw/win64
-          
-      - run: zip -r matlab-glfw.zip .
       
       - uses: actions/upload-artifact@v2
         with:
           name: matlab-glfw
-          path: matlab-glfw.zip
+          path: .
           
