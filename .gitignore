@@ -1,3 +1,4 @@
 glfw
 deps/glfw
 *.mltbx
+**/.DS_Store
