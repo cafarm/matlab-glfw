@@ -36,12 +36,18 @@ classdef tglfw < matlab.unittest.TestCase
     end
     
     methods (Test)
+        function getError(testCase)
+            [code,desc] = glfwGetError();
+            testCase.verifyClass(code, ?double);
+            testCase.verifyClass(desc, ?string);
+        end
+        
         function getVersion(testCase)
             [major,minor,rev] = glfwGetVersion();
             testCase.log(1, sprintf("Running against GLFW %i.%i.%i", major, minor, rev));
-            testCase.verifyNotEmpty(major);
-            testCase.verifyNotEmpty(minor);
-            testCase.verifyNotEmpty(rev);
+            testCase.verifyClass(major, ?double);
+            testCase.verifyClass(minor, ?double);
+            testCase.verifyClass(rev, ?double);
         end
         
         function makeContextCurrent(testCase)
