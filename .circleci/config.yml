@@ -11,10 +11,7 @@ jobs:
           name: Compile GLFW
           command: |
             sudo apt-get update && sudo apt-get install xorg-dev
-            git clone --depth 1 --branch 3.3.4 https://github.com/glfw/glfw.git
-            cd glfw
-            cmake -DCMAKE_INSTALL_PREFIX=../deps/glfw/glnxa64 -DBUILD_SHARED_LIBS=ON .
-            make all install
+            ./getdeps.sh
       - matlab/install
       - matlab/run-tests:
           source-folder: src
