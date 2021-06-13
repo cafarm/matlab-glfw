@@ -2,7 +2,10 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@0
 jobs:
-  build:
+  test:
+    parameters:
+      matlab-release:
+        type: string
     machine:
       image: 'ubuntu-2004:202104-01'
     steps:
@@ -12,6 +15,14 @@ jobs:
           command: |
             sudo apt-get update && sudo apt-get install xorg-dev
             ./getdeps.sh
-      - matlab/install
+      - matlab/install:
+          release: << parameters.matlab-release >>
       - matlab/run-tests:
           source-folder: src
+workflows:
+  tests-matrix:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              matlab-release: ["R2020a", "latest"]
