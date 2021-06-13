@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   matlab: mathworks/matlab@0
+  codecov: codecov/codecov@1
 jobs:
   test:
     parameters:
@@ -19,6 +20,11 @@ jobs:
           release: << parameters.matlab-release >>
       - matlab/run-tests:
           source-folder: src
+          test-results-junit: test-results/matlab/results.xml
+          code-coverage-cobertura: coverage.xml
+      - store_test_results:
+          path: test-results
+      - codecov/upload
 workflows:
   tests-matrix:
     jobs:
