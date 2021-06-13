@@ -68,8 +68,15 @@ jobs:
           name: win64
           path: deps/glfw/win64
       
+      - uses: matlab-actions/setup-matlab@v1
+
+      - name: Package toolbox
+        uses: matlab-actions/run-command@v1
+        with:
+          command: package
+
       - uses: actions/upload-artifact@v2
         with:
-          name: matlab-glfw
-          path: .
-          
+          name: matlab-glfw.mltbx
+          path: matlab-glfw.mltbx
+          if-no-files-found: error
