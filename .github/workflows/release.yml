@@ -38,6 +38,7 @@ jobs:
       - name: Store GLFW binaries
         uses: actions/upload-artifact@v2
         with:
+          name: ${{ matrix.computer }}
           path: glfw/${{ matrix.computer }}
   
   build-matlab-glfw:
@@ -50,17 +51,17 @@ jobs:
       
       - uses: actions/download-artifact@v2
         with:
-          name: glfw/glnxa64
+          name: glnxa64
           path: deps/glfw/glnxa64
       
       - uses: actions/download-artifact@v2
         with:
-          name: glfw/maci64
+          name: maci64
           path: deps/glfw/maci64
           
       - uses: actions/download-artifact@v2
         with:
-          name: glfw/win64
+          name: win64
           path: deps/glfw/win64
           
       - run: zip -r matlab-glfw.zip .
