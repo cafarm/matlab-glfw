@@ -5,6 +5,7 @@ classdef tglfw < matlab.unittest.TestCase
     
     methods (TestClassSetup)
         function init(testCase)
+            glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.TRUE);
             success = glfwInit();
             if ~success
                 [code,desc] = glfwGetError();
@@ -21,6 +22,7 @@ classdef tglfw < matlab.unittest.TestCase
     
     methods (TestMethodSetup)
         function createWindow(testCase)
+            glfwWindowHint(GLFW.VISIBLE, GLFW.TRUE);
             testCase.Window = glfwCreateWindow(640, 480, "Hello World");
             if isNull(testCase.Window)
                 [code,desc] = glfwGetError();
@@ -36,10 +38,6 @@ classdef tglfw < matlab.unittest.TestCase
     end
     
     methods (Test)
-        function initHint(~)
-            glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.FALSE);
-        end
-        
         function getError(testCase)
             [code,desc] = glfwGetError();
             testCase.verifyTrue(isnumeric(code));
