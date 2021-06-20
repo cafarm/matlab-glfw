@@ -6,5 +6,5 @@ arguments
     monitor (1,1) {mustBeLibPointer} = libpointer
     share (1,1) {mustBeLibPointer} = libpointer
 end
-window = calllib("libglfw", "glfwCreateWindow", width, height, char(title), monitor, share);
+window = calllibglfw("glfwCreateWindow", width, height, char(title), monitor, share);
 end

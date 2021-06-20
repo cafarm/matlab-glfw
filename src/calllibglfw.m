@@ -1,7 +1,11 @@
-function loadLibglfw()
-if libisloaded("libglfw")
-    return;
+function varargout = calllibglfw(funcname, varargin)
+if ~libisloaded("libglfw")
+    loadlibglfw();
 end
+[varargout{1:nargout}] = calllib("libglfw", funcname, varargin{:});
+end
+
+function loadlibglfw()
 addPathIfNecessary(libglfwPath);
 warnStruct = warning("off", "MATLAB:loadlibrary:TypeNotFound");
 restoreWarn = onCleanup(@()warning(warnStruct));

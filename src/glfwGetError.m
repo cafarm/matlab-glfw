@@ -1,5 +1,4 @@
 function [code, description] = glfwGetError()
-loadLibglfw();
-[code, description] = calllib("libglfw", "glfwGetError", {});
+[code, description] = calllibglfw("glfwGetError", {});
 description = convertCharsToStrings(description);
 end

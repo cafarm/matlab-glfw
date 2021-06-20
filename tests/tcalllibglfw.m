@@ -1,4 +1,4 @@
-classdef tglfwCalllib < matlab.unittest.TestCase
+classdef tcalllibglfw < matlab.unittest.TestCase
     properties (TestParameter)
         FuncName = allFuncNames();
     end
@@ -7,7 +7,7 @@ classdef tglfwCalllib < matlab.unittest.TestCase
         function calllib(testCase, FuncName)
             import matlab.unittest.constraints.Matches;
             contents = fileread(fullfile(srcFolder, FuncName + ".m"));
-            testCase.verifyThat(contents, Matches(sprintf('calllib("libglfw",[ ]*"%s"', FuncName)));
+            testCase.verifyThat(contents, Matches(sprintf('calllibglfw([ ]*"%s"', FuncName)));
         end
     end
 end

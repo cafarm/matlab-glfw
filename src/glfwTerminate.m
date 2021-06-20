@@ -1,4 +1,3 @@
 function glfwTerminate()
-calllib("libglfw", "glfwTerminate");
-unloadlibrary("libglfw");
+calllibglfw("glfwTerminate");
 end

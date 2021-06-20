@@ -1,3 +1,3 @@
 function glfwPollEvents()
-calllib("libglfw", "glfwPollEvents");
+calllibglfw("glfwPollEvents");
 end
