@@ -10,8 +10,7 @@ The bindings make use of [function argument validation](https://www.mathworks.co
 Below is a short example of setting up a window and OpenGL context with GLFW in MATLAB. This example was ported from the [GLFW documentation](https://www.glfw.org/documentation.html).
 ```matlab
 % Initialize the library
-success = glfwInit();
-if ~success
+if ~glfwInit()
     error("failed to initialize library");
 end
 

@@ -1,6 +1,5 @@
 % Initialize the library
-success = glfwInit();
-if ~success
+if ~glfwInit()
     error("failed to initialize library");
 end
 
