@@ -36,6 +36,10 @@ classdef tglfw < matlab.unittest.TestCase
     end
     
     methods (Test)
+        function initHint(~)
+            glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.FALSE);
+        end
+        
         function getError(testCase)
             [code,desc] = glfwGetError();
             testCase.verifyTrue(isnumeric(code));
