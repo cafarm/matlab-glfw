@@ -36,7 +36,6 @@ while ~glfwWindowShouldClose(window)
     glfwPollEvents();
 end
 
-clear window;
 glfwTerminate();
 ```
 
