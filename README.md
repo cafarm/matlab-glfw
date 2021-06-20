@@ -39,7 +39,7 @@ glfwTerminate();
 ```
 
 ## Constants
-Constants are available under the GLFW class and have the same name as GLFW C library constants minus the `GLFW_` prefix.
+Constants are available under the `GLFW` class and have the same name as GLFW C library constants minus the `GLFW_` prefix.
 
 ```matlab
 glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.FALSE);
