@@ -1,0 +1,1053 @@
+From 5bdf2fceb4baf5607e6913c8e16dd00394603169 Mon Sep 17 00:00:00 2001
+From: Mark Cafaro <mark.cafaro@gmail.com>
+Date: Sun, 27 Jun 2021 22:38:16 -0400
+Subject: [PATCH] Call cocoa APIs on main thread
+
+---
+ src/cocoa_init.m   |  28 +-
+ src/cocoa_window.m | 641 +++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 621 insertions(+), 48 deletions(-)
+
+diff --git a/src/cocoa_init.m b/src/cocoa_init.m
+index 209639e..14b4c3c 100644
+--- a/src/cocoa_init.m
++++ b/src/cocoa_init.m
+@@ -495,7 +495,7 @@ - (void)applicationDidHide:(NSNotification *)notification
+ //////                       GLFW platform API                      //////
+ //////////////////////////////////////////////////////////////////////////
+ 
+-int _glfwPlatformInit(void)
++int _glfwPlatformInitUnsafe(void)
+ {
+     @autoreleasepool {
+ 
+@@ -565,7 +565,20 @@ int _glfwPlatformInit(void)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformTerminate(void)
++int _glfwPlatformInit(void)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformInitUnsafe();
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformInitUnsafe();
++        });
++    }
++    return result;
++}
++
++void _glfwPlatformTerminateUnsafe(void)
+ {
+     @autoreleasepool {
+ 
+@@ -612,6 +625,17 @@ void _glfwPlatformTerminate(void)
+     } // autoreleasepool
+ }
+ 
++void _glfwPlatformTerminate(void)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformTerminateUnsafe();
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformTerminateUnsafe();
++        });
++    }
++}
++
+ const char* _glfwPlatformGetVersionString(void)
+ {
+     return _GLFW_VERSION_NUMBER " Cocoa NSGL EGL OSMesa"
+diff --git a/src/cocoa_window.m b/src/cocoa_window.m
+index 9fa72a6..82ee44d 100644
+--- a/src/cocoa_window.m
++++ b/src/cocoa_window.m
+@@ -895,7 +895,7 @@ float _glfwTransformYNS(float y)
+ //////                       GLFW platform API                      //////
+ //////////////////////////////////////////////////////////////////////////
+ 
+-int _glfwPlatformCreateWindow(_GLFWwindow* window,
++int _glfwPlatformCreateWindowUnsafe(_GLFWwindow* window,
+                               const _GLFWwndconfig* wndconfig,
+                               const _GLFWctxconfig* ctxconfig,
+                               const _GLFWfbconfig* fbconfig)
+@@ -950,7 +950,23 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformDestroyWindow(_GLFWwindow* window)
++int _glfwPlatformCreateWindow(_GLFWwindow* window,
++                              const _GLFWwndconfig* wndconfig,
++                              const _GLFWctxconfig* ctxconfig,
++                              const _GLFWfbconfig* fbconfig)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformCreateWindowUnsafe(window, wndconfig, ctxconfig, fbconfig);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformCreateWindowUnsafe(window, wndconfig, ctxconfig, fbconfig);
++        });
++    }
++    return result;
++}
++
++void _glfwPlatformDestroyWindowUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+ 
+@@ -981,7 +997,18 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
++void _glfwPlatformDestroyWindow(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformDestroyWindowUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformDestroyWindowUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowTitleUnsafe(_GLFWwindow* window, const char* title)
+ {
+     @autoreleasepool {
+     NSString* string = @(title);
+@@ -992,13 +1019,24 @@ void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
+     } // autoreleasepool
+ }
+ 
++void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowTitleUnsafe(window, title);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowTitleUnsafe(window, title);
++        });
++    }
++}
++
+ void _glfwPlatformSetWindowIcon(_GLFWwindow* window,
+                                 int count, const GLFWimage* images)
+ {
+     // Regular windows do not have icons
+ }
+ 
+-void _glfwPlatformGetWindowPos(_GLFWwindow* window, int* xpos, int* ypos)
++void _glfwPlatformGetWindowPosUnsafe(_GLFWwindow* window, int* xpos, int* ypos)
+ {
+     @autoreleasepool {
+ 
+@@ -1013,7 +1051,18 @@ void _glfwPlatformGetWindowPos(_GLFWwindow* window, int* xpos, int* ypos)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowPos(_GLFWwindow* window, int x, int y)
++void _glfwPlatformGetWindowPos(_GLFWwindow* window, int* xpos, int* ypos)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformGetWindowPosUnsafe(window, xpos, ypos);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformGetWindowPosUnsafe(window, xpos, ypos);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowPosUnsafe(_GLFWwindow* window, int x, int y)
+ {
+     @autoreleasepool {
+ 
+@@ -1025,7 +1074,18 @@ void _glfwPlatformSetWindowPos(_GLFWwindow* window, int x, int y)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformGetWindowSize(_GLFWwindow* window, int* width, int* height)
++void _glfwPlatformSetWindowPos(_GLFWwindow* window, int x, int y)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowPosUnsafe(window, x, y);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowPosUnsafe(window, x, y);
++        });
++    }
++}
++
++void _glfwPlatformGetWindowSizeUnsafe(_GLFWwindow* window, int* width, int* height)
+ {
+     @autoreleasepool {
+ 
+@@ -1039,7 +1099,18 @@ void _glfwPlatformGetWindowSize(_GLFWwindow* window, int* width, int* height)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
++void _glfwPlatformGetWindowSize(_GLFWwindow* window, int* width, int* height)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformGetWindowSizeUnsafe(window, width, height);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformGetWindowSizeUnsafe(window, width, height);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowSizeUnsafe(_GLFWwindow* window, int width, int height)
+ {
+     @autoreleasepool {
+ 
+@@ -1061,7 +1132,18 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
++void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowSizeUnsafe(window, width, height);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowSizeUnsafe(window, width, height);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowSizeLimitsUnsafe(_GLFWwindow* window,
+                                       int minwidth, int minheight,
+                                       int maxwidth, int maxheight)
+ {
+@@ -1080,7 +1162,20 @@ void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom)
++void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
++                                      int minwidth, int minheight,
++                                      int maxwidth, int maxheight)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowSizeLimitsUnsafe(window, minwidth, minheight, maxwidth, maxheight);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowSizeLimitsUnsafe(window, minwidth, minheight, maxwidth, maxheight);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowAspectRatioUnsafe(_GLFWwindow* window, int numer, int denom)
+ {
+     @autoreleasepool {
+     if (numer == GLFW_DONT_CARE || denom == GLFW_DONT_CARE)
+@@ -1090,7 +1185,18 @@ void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* height)
++void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowAspectRatioUnsafe(window, numer, denom);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowAspectRatioUnsafe(window, numer, denom);
++        });
++    }
++}
++
++void _glfwPlatformGetFramebufferSizeUnsafe(_GLFWwindow* window, int* width, int* height)
+ {
+     @autoreleasepool {
+ 
+@@ -1105,7 +1211,18 @@ void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* heigh
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformGetWindowFrameSize(_GLFWwindow* window,
++void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* height)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformGetFramebufferSizeUnsafe(window, width, height);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformGetFramebufferSizeUnsafe(window, width, height);
++        });
++    }
++}
++
++void _glfwPlatformGetWindowFrameSizeUnsafe(_GLFWwindow* window,
+                                      int* left, int* top,
+                                      int* right, int* bottom)
+ {
+@@ -1128,7 +1245,20 @@ void _glfwPlatformGetWindowFrameSize(_GLFWwindow* window,
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformGetWindowContentScale(_GLFWwindow* window,
++void _glfwPlatformGetWindowFrameSize(_GLFWwindow* window,
++                                     int* left, int* top,
++                                     int* right, int* bottom)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformGetWindowFrameSizeUnsafe(window, left, top, right, bottom);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformGetWindowFrameSizeUnsafe(window, left, top, right, bottom);
++        });
++    }
++}
++
++void _glfwPlatformGetWindowContentScaleUnsafe(_GLFWwindow* window,
+                                         float* xscale, float* yscale)
+ {
+     @autoreleasepool {
+@@ -1144,14 +1274,37 @@ void _glfwPlatformGetWindowContentScale(_GLFWwindow* window,
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformIconifyWindow(_GLFWwindow* window)
++void _glfwPlatformGetWindowContentScale(_GLFWwindow* window,
++                                        float* xscale, float* yscale)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformGetWindowContentScaleUnsafe(window, xscale, yscale);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformGetWindowContentScaleUnsafe(window, xscale, yscale);
++        });
++    }
++}
++
++void _glfwPlatformIconifyWindowUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     [window->ns.object miniaturize:nil];
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformRestoreWindow(_GLFWwindow* window)
++void _glfwPlatformIconifyWindow(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformIconifyWindowUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformIconifyWindowUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformRestoreWindowUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     if ([window->ns.object isMiniaturized])
+@@ -1161,7 +1314,18 @@ void _glfwPlatformRestoreWindow(_GLFWwindow* window)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
++void _glfwPlatformRestoreWindow(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformRestoreWindowUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformRestoreWindowUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformMaximizeWindowUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     if (![window->ns.object isZoomed])
+@@ -1169,28 +1333,72 @@ void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformShowWindow(_GLFWwindow* window)
++void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformMaximizeWindowUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformMaximizeWindowUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformShowWindowUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     [window->ns.object orderFront:nil];
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformHideWindow(_GLFWwindow* window)
++void _glfwPlatformShowWindow(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformShowWindowUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformShowWindowUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformHideWindowUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     [window->ns.object orderOut:nil];
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformRequestWindowAttention(_GLFWwindow* window)
++void _glfwPlatformHideWindow(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformHideWindowUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformHideWindowUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformRequestWindowAttentionUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     [NSApp requestUserAttention:NSInformationalRequest];
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformFocusWindow(_GLFWwindow* window)
++void _glfwPlatformRequestWindowAttention(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformRequestWindowAttentionUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformRequestWindowAttentionUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformFocusWindowUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     // Make us the active application
+@@ -1202,7 +1410,18 @@ void _glfwPlatformFocusWindow(_GLFWwindow* window)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
++void _glfwPlatformFocusWindow(_GLFWwindow* window)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformFocusWindowUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformFocusWindowUnsafe(window);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowMonitorUnsafe(_GLFWwindow* window,
+                                    _GLFWmonitor* monitor,
+                                    int xpos, int ypos,
+                                    int width, int height,
+@@ -1295,35 +1514,102 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
+     } // autoreleasepool
+ }
+ 
+-int _glfwPlatformWindowFocused(_GLFWwindow* window)
++void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
++                                   _GLFWmonitor* monitor,
++                                   int xpos, int ypos,
++                                   int width, int height,
++                                   int refreshRate)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowMonitorUnsafe(window, monitor, xpos, ypos, width, height, refreshRate);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowMonitorUnsafe(window, monitor, xpos, ypos, width, height, refreshRate);
++        });
++    }
++}
++
++int _glfwPlatformWindowFocusedUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     return [window->ns.object isKeyWindow];
+     } // autoreleasepool
+ }
+ 
+-int _glfwPlatformWindowIconified(_GLFWwindow* window)
++int _glfwPlatformWindowFocused(_GLFWwindow* window)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformWindowFocusedUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformWindowFocusedUnsafe(window);
++        });
++    }
++    return result;
++}
++
++int _glfwPlatformWindowIconifiedUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     return [window->ns.object isMiniaturized];
+     } // autoreleasepool
+ }
+ 
+-int _glfwPlatformWindowVisible(_GLFWwindow* window)
++int _glfwPlatformWindowIconified(_GLFWwindow* window)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformWindowIconifiedUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformWindowIconifiedUnsafe(window);
++        });
++    }
++    return result;
++}
++
++int _glfwPlatformWindowVisibleUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     return [window->ns.object isVisible];
+     } // autoreleasepool
+ }
+ 
+-int _glfwPlatformWindowMaximized(_GLFWwindow* window)
++int _glfwPlatformWindowVisible(_GLFWwindow* window)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformWindowVisibleUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformWindowVisibleUnsafe(window);
++        });
++    }
++    return result;
++}
++
++int _glfwPlatformWindowMaximizedUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     return [window->ns.object isZoomed];
+     } // autoreleasepool
+ }
+ 
+-int _glfwPlatformWindowHovered(_GLFWwindow* window)
++int _glfwPlatformWindowMaximized(_GLFWwindow* window)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformWindowMaximizedUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformWindowMaximizedUnsafe(window);
++        });
++    }
++    return result;
++}
++
++int _glfwPlatformWindowHoveredUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+ 
+@@ -1341,21 +1627,58 @@ int _glfwPlatformWindowHovered(_GLFWwindow* window)
+     } // autoreleasepool
+ }
+ 
+-int _glfwPlatformFramebufferTransparent(_GLFWwindow* window)
++int _glfwPlatformWindowHovered(_GLFWwindow* window)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformWindowHoveredUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformWindowHoveredUnsafe(window);
++        });
++    }
++    return result;
++}
++
++int _glfwPlatformFramebufferTransparentUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     return ![window->ns.object isOpaque] && ![window->ns.view isOpaque];
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowResizable(_GLFWwindow* window, GLFWbool enabled)
++int _glfwPlatformFramebufferTransparent(_GLFWwindow* window)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformFramebufferTransparentUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformFramebufferTransparentUnsafe(window);
++        });
++    }
++    return result;
++}
++
++void _glfwPlatformSetWindowResizableUnsafe(_GLFWwindow* window, GLFWbool enabled)
+ {
+     @autoreleasepool {
+     [window->ns.object setStyleMask:getStyleMask(window)];
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowDecorated(_GLFWwindow* window, GLFWbool enabled)
++void _glfwPlatformSetWindowResizable(_GLFWwindow* window, GLFWbool enabled)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowResizableUnsafe(window, enabled);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowResizableUnsafe(window, enabled);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowDecoratedUnsafe(_GLFWwindow* window, GLFWbool enabled)
+ {
+     @autoreleasepool {
+     [window->ns.object setStyleMask:getStyleMask(window)];
+@@ -1363,7 +1686,18 @@ void _glfwPlatformSetWindowDecorated(_GLFWwindow* window, GLFWbool enabled)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowFloating(_GLFWwindow* window, GLFWbool enabled)
++void _glfwPlatformSetWindowDecorated(_GLFWwindow* window, GLFWbool enabled)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowDecoratedUnsafe(window, enabled);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowDecoratedUnsafe(window, enabled);
++        });
++    }
++}
++
++void _glfwPlatformSetWindowFloatingUnsafe(_GLFWwindow* window, GLFWbool enabled)
+ {
+     @autoreleasepool {
+     if (enabled)
+@@ -1373,20 +1707,55 @@ void _glfwPlatformSetWindowFloating(_GLFWwindow* window, GLFWbool enabled)
+     } // autoreleasepool
+ }
+ 
+-float _glfwPlatformGetWindowOpacity(_GLFWwindow* window)
++void _glfwPlatformSetWindowFloating(_GLFWwindow* window, GLFWbool enabled)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowFloatingUnsafe(window, enabled);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowFloatingUnsafe(window, enabled);
++        });
++    }
++}
++
++float _glfwPlatformGetWindowOpacityUnsafe(_GLFWwindow* window)
+ {
+     @autoreleasepool {
+     return (float) [window->ns.object alphaValue];
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetWindowOpacity(_GLFWwindow* window, float opacity)
++float _glfwPlatformGetWindowOpacity(_GLFWwindow* window)
++{
++    __block float result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformGetWindowOpacityUnsafe(window);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformGetWindowOpacityUnsafe(window);
++        });
++    }
++    return result;
++}
++
++void _glfwPlatformSetWindowOpacityUnsafe(_GLFWwindow* window, float opacity)
+ {
+     @autoreleasepool {
+     [window->ns.object setAlphaValue:opacity];
+     } // autoreleasepool
+ }
+ 
++void _glfwPlatformSetWindowOpacity(_GLFWwindow* window, float opacity)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetWindowOpacityUnsafe(window, opacity);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetWindowOpacityUnsafe(window, opacity);
++        });
++    }
++}
++
+ void _glfwPlatformSetRawMouseMotion(_GLFWwindow *window, GLFWbool enabled)
+ {
+ }
+@@ -1396,7 +1765,7 @@ GLFWbool _glfwPlatformRawMouseMotionSupported(void)
+     return GLFW_FALSE;
+ }
+ 
+-void _glfwPlatformPollEvents(void)
++void _glfwPlatformPollEventsUnsafe(void)
+ {
+     @autoreleasepool {
+ 
+@@ -1418,7 +1787,18 @@ void _glfwPlatformPollEvents(void)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformWaitEvents(void)
++void _glfwPlatformPollEvents(void)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformPollEventsUnsafe();
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformPollEventsUnsafe();
++        });
++    }
++}
++
++void _glfwPlatformWaitEventsUnsafe(void)
+ {
+     @autoreleasepool {
+ 
+@@ -1439,7 +1819,18 @@ void _glfwPlatformWaitEvents(void)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformWaitEventsTimeout(double timeout)
++void _glfwPlatformWaitEvents(void)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformWaitEventsUnsafe();
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformWaitEventsUnsafe();
++        });
++    }
++}
++
++void _glfwPlatformWaitEventsTimeoutUnsafe(double timeout)
+ {
+     @autoreleasepool {
+ 
+@@ -1459,7 +1850,18 @@ void _glfwPlatformWaitEventsTimeout(double timeout)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformPostEmptyEvent(void)
++void _glfwPlatformWaitEventsTimeout(double timeout)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformWaitEventsTimeoutUnsafe(timeout);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformWaitEventsTimeoutUnsafe(timeout);
++        });
++    }
++}
++
++void _glfwPlatformPostEmptyEventUnsafe(void)
+ {
+     @autoreleasepool {
+ 
+@@ -1480,7 +1882,18 @@ void _glfwPlatformPostEmptyEvent(void)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformGetCursorPos(_GLFWwindow* window, double* xpos, double* ypos)
++void _glfwPlatformPostEmptyEvent(void)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformPostEmptyEventUnsafe();
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformPostEmptyEventUnsafe();
++        });
++    }
++}
++
++void _glfwPlatformGetCursorPosUnsafe(_GLFWwindow* window, double* xpos, double* ypos)
+ {
+     @autoreleasepool {
+ 
+@@ -1496,7 +1909,18 @@ void _glfwPlatformGetCursorPos(_GLFWwindow* window, double* xpos, double* ypos)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
++void _glfwPlatformGetCursorPos(_GLFWwindow* window, double* xpos, double* ypos)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformGetCursorPosUnsafe(window, xpos, ypos);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformGetCursorPosUnsafe(window, xpos, ypos);
++        });
++    }
++}
++
++void _glfwPlatformSetCursorPosUnsafe(_GLFWwindow* window, double x, double y)
+ {
+     @autoreleasepool {
+ 
+@@ -1527,7 +1951,18 @@ void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
++void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetCursorPosUnsafe(window, x, y);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetCursorPosUnsafe(window, x, y);
++        });
++    }
++}
++
++void _glfwPlatformSetCursorModeUnsafe(_GLFWwindow* window, int mode)
+ {
+     @autoreleasepool {
+     if (_glfwPlatformWindowFocused(window))
+@@ -1535,7 +1970,18 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
+     } // autoreleasepool
+ }
+ 
+-const char* _glfwPlatformGetScancodeName(int scancode)
++void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetCursorModeUnsafe(window, mode);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetCursorModeUnsafe(window, mode);
++        });
++    }
++}
++
++const char* _glfwPlatformGetScancodeNameUnsafe(int scancode)
+ {
+     @autoreleasepool {
+ 
+@@ -1584,12 +2030,25 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
+     } // autoreleasepool
+ }
+ 
++const char* _glfwPlatformGetScancodeName(int scancode)
++{
++    __block const char* result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformGetScancodeNameUnsafe(scancode);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformGetScancodeNameUnsafe(scancode);
++        });
++    }
++    return result;
++}
++
+ int _glfwPlatformGetKeyScancode(int key)
+ {
+     return _glfw.ns.scancodes[key];
+ }
+ 
+-int _glfwPlatformCreateCursor(_GLFWcursor* cursor,
++int _glfwPlatformCreateCursorUnsafe(_GLFWcursor* cursor,
+                               const GLFWimage* image,
+                               int xhot, int yhot)
+ {
+@@ -1633,7 +2092,22 @@ int _glfwPlatformCreateCursor(_GLFWcursor* cursor,
+     } // autoreleasepool
+ }
+ 
+-int _glfwPlatformCreateStandardCursor(_GLFWcursor* cursor, int shape)
++int _glfwPlatformCreateCursor(_GLFWcursor* cursor,
++                              const GLFWimage* image,
++                              int xhot, int yhot)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformCreateCursorUnsafe(cursor, image, xhot, yhot);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformCreateCursorUnsafe(cursor, image, xhot, yhot);
++        });
++    }
++    return result;
++}
++
++int _glfwPlatformCreateStandardCursorUnsafe(_GLFWcursor* cursor, int shape)
+ {
+     @autoreleasepool {
+ 
+@@ -1663,7 +2137,20 @@ int _glfwPlatformCreateStandardCursor(_GLFWcursor* cursor, int shape)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformDestroyCursor(_GLFWcursor* cursor)
++int _glfwPlatformCreateStandardCursor(_GLFWcursor* cursor, int shape)
++{
++    __block int result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformCreateStandardCursorUnsafe(cursor, shape);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformCreateStandardCursorUnsafe(cursor, shape);
++        });
++    }
++    return result;
++}
++
++void _glfwPlatformDestroyCursorUnsafe(_GLFWcursor* cursor)
+ {
+     @autoreleasepool {
+     if (cursor->ns.object)
+@@ -1671,7 +2158,18 @@ void _glfwPlatformDestroyCursor(_GLFWcursor* cursor)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor)
++void _glfwPlatformDestroyCursor(_GLFWcursor* cursor)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformDestroyCursorUnsafe(cursor);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformDestroyCursorUnsafe(cursor);
++        });
++    }
++}
++
++void _glfwPlatformSetCursorUnsafe(_GLFWwindow* window, _GLFWcursor* cursor)
+ {
+     @autoreleasepool {
+     if (cursorInContentArea(window))
+@@ -1679,7 +2177,18 @@ void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor)
+     } // autoreleasepool
+ }
+ 
+-void _glfwPlatformSetClipboardString(const char* string)
++void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetCursorUnsafe(window, cursor);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetCursorUnsafe(window, cursor);
++        });
++    }
++}
++
++void _glfwPlatformSetClipboardStringUnsafe(const char* string)
+ {
+     @autoreleasepool {
+     NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
+@@ -1688,7 +2197,18 @@ void _glfwPlatformSetClipboardString(const char* string)
+     } // autoreleasepool
+ }
+ 
+-const char* _glfwPlatformGetClipboardString(void)
++void _glfwPlatformSetClipboardString(const char* string)
++{
++    if ([NSThread isMainThread]) {
++        _glfwPlatformSetClipboardStringUnsafe(string);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            _glfwPlatformSetClipboardStringUnsafe(string);
++        });
++    }
++}
++
++const char* _glfwPlatformGetClipboardStringUnsafe(void)
+ {
+     @autoreleasepool {
+ 
+@@ -1717,6 +2237,19 @@ void _glfwPlatformSetClipboardString(const char* string)
+     } // autoreleasepool
+ }
+ 
++const char* _glfwPlatformGetClipboardString(void)
++{
++    __block const char* result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformGetClipboardStringUnsafe();
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformGetClipboardStringUnsafe();
++        });
++    }
++    return result;
++}
++
+ void _glfwPlatformGetRequiredInstanceExtensions(char** extensions)
+ {
+     if (_glfw.vk.KHR_surface && _glfw.vk.EXT_metal_surface)
+@@ -1738,7 +2271,7 @@ int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
+     return GLFW_TRUE;
+ }
+ 
+-VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
++VkResult _glfwPlatformCreateWindowSurfaceUnsafe(VkInstance instance,
+                                           _GLFWwindow* window,
+                                           const VkAllocationCallbacks* allocator,
+                                           VkSurfaceKHR* surface)
+@@ -1829,6 +2362,22 @@ VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
+     } // autoreleasepool
+ }
+ 
++VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
++                                          _GLFWwindow* window,
++                                          const VkAllocationCallbacks* allocator,
++                                          VkSurfaceKHR* surface)
++{
++    __block VkResult result;
++    if ([NSThread isMainThread]) {
++        result = _glfwPlatformCreateWindowSurfaceUnsafe(instance, window, allocator, surface);
++    } else {
++        dispatch_sync(dispatch_get_main_queue(), ^{
++            result = _glfwPlatformCreateWindowSurfaceUnsafe(instance, window, allocator, surface);
++        });
++    }
++    return result;
++}
++
+ 
+ //////////////////////////////////////////////////////////////////////////
+ //////                        GLFW native API                       //////
+-- 
+2.30.1 (Apple Git-130)
+
