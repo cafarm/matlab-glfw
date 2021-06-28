@@ -25,25 +25,21 @@ jobs:
             computer: win64
     
     steps:
-      - name: Checkout GLFW
+      - name: Checkout matlab-glfw
         uses: actions/checkout@v2
-        with:
-          repository: glfw/glfw
-          ref: 3.3.4
     
       - name: Compile GLFW
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
             sudo apt-get update && sudo apt-get install xorg-dev
           fi
-          cmake -DCMAKE_INSTALL_PREFIX=${{ matrix.computer }} -DBUILD_SHARED_LIBS=ON .
-          cmake --build . --target install
+          ./getdeps.sh
       
       - name: Store GLFW binaries
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.computer }}
-          path: ${{ matrix.computer }}
+          path: deps/glfw/${{ matrix.computer }}
   
   build-matlab-glfw:
     runs-on: ubuntu-latest
