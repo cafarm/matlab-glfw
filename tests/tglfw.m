@@ -43,6 +43,17 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyTrue(isnumeric(code));
             testCase.verifyClass(desc, ?string);
         end
+
+        function getMonitors(testCase)
+            [monitors,count] = glfwGetMonitors();
+            testCase.verifyClass(monitors, "lib.pointer");
+            testCase.verifyTrue(isnumeric(count));
+        end
+
+        function getPrimaryMonitor(testCase)
+            monitor = glfwGetPrimaryMonitor();
+            testCase.verifyClass(monitor, "lib.pointer");
+        end
         
         function getVersion(testCase)
             [major,minor,rev] = glfwGetVersion();

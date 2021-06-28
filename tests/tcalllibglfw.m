@@ -15,6 +15,7 @@ end
 function n = allFuncNames()
 listing = dir(fullfile(srcFolder, "glfw*"));
 n = string({listing.name});
+n(n=="GLFW.m") = [];
 n = replace(n, ".m", "");
 n = cellstr(n);
 end
