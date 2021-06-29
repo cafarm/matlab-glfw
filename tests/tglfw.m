@@ -9,7 +9,7 @@ classdef tglfw < matlab.unittest.TestCase
             success = glfwInit();
             if ~success
                 [code,desc] = glfwGetError();
-                testCase.fatalAssertFail(sprintf("%i:%s",code,desc));
+                testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
             end
         end
     end
@@ -26,7 +26,7 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.Window = glfwCreateWindow(640, 480, "Hello World");
             if isNull(testCase.Window)
                 [code,desc] = glfwGetError();
-                testCase.fatalAssertFail(sprintf("%i:%s",code,desc));
+                testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
             end
         end
     end
@@ -40,20 +40,20 @@ classdef tglfw < matlab.unittest.TestCase
     methods (Test)
         function getError(testCase)
             [code,desc] = glfwGetError();
-            testCase.verifyTrue(isnumeric(code));
+            testCase.verifyClass(code, ?double);
             testCase.verifyClass(desc, ?string);
         end
 
         function getFramebufferSize(testCase)
             [width,height] = glfwGetFramebufferSize(testCase.Window);
-            testCase.verifyTrue(isnumeric(width));
-            testCase.verifyTrue(isnumeric(height));
+            testCase.verifyClass(width, ?double);
+            testCase.verifyClass(height, ?double);
         end
 
         function getMonitors(testCase)
             [monitors,count] = glfwGetMonitors();
             testCase.verifyClass(monitors, "lib.pointer");
-            testCase.verifyTrue(isnumeric(count));
+            testCase.verifyClass(count, ?double);
         end
 
         function getPrimaryMonitor(testCase)
@@ -63,21 +63,21 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getTime(testCase)
             time = glfwGetTime();
-            testCase.verifyTrue(isnumeric(time));
+            testCase.verifyClass(time, ?double);
         end
         
         function getVersion(testCase)
             [major,minor,rev] = glfwGetVersion();
-            testCase.log(1, sprintf("Running against GLFW %i.%i.%i", major, minor, rev));
-            testCase.verifyTrue(isnumeric(major));
-            testCase.verifyTrue(isnumeric(minor));
-            testCase.verifyTrue(isnumeric(rev));
+            testCase.log(1, sprintf("Running against GLFW %d.%d.%d", major, minor, rev));
+            testCase.verifyClass(major, ?double);
+            testCase.verifyClass(minor, ?double);
+            testCase.verifyClass(rev, ?double);
         end
 
         function glfwGetWindowSize(testCase)
             [width,height] = glfwGetWindowSize(testCase.Window);
-            testCase.verifyEqual(double(width), 640);
-            testCase.verifyEqual(double(height), 480);
+            testCase.verifyEqual(width, 640);
+            testCase.verifyEqual(height, 480);
         end
         
         function makeContextCurrent(testCase)

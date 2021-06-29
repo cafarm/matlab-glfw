@@ -1,3 +1,5 @@
+% Ported from https://www.glfw.org/documentation.html
+
 % Initialize the library
 if ~glfwInit()
     error("failed to initialize library");
