@@ -44,6 +44,12 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(desc, ?string);
         end
 
+        function getFramebufferSize(testCase)
+            [width,height] = glfwGetFramebufferSize(testCase.Window);
+            testCase.verifyTrue(isnumeric(width));
+            testCase.verifyTrue(isnumeric(height));
+        end
+
         function getMonitors(testCase)
             [monitors,count] = glfwGetMonitors();
             testCase.verifyClass(monitors, "lib.pointer");
@@ -54,6 +60,11 @@ classdef tglfw < matlab.unittest.TestCase
             monitor = glfwGetPrimaryMonitor();
             testCase.verifyClass(monitor, "lib.pointer");
         end
+
+        function getTime(testCase)
+            time = glfwGetTime();
+            testCase.verifyTrue(isnumeric(time));
+        end
         
         function getVersion(testCase)
             [major,minor,rev] = glfwGetVersion();
@@ -61,6 +72,12 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyTrue(isnumeric(major));
             testCase.verifyTrue(isnumeric(minor));
             testCase.verifyTrue(isnumeric(rev));
+        end
+
+        function glfwGetWindowSize(testCase)
+            [width,height] = glfwGetWindowSize(testCase.Window);
+            testCase.verifyEqual(double(width), 640);
+            testCase.verifyEqual(double(height), 480);
         end
         
         function makeContextCurrent(testCase)
@@ -73,6 +90,10 @@ classdef tglfw < matlab.unittest.TestCase
         
         function swapBuffers(testCase)
             glfwSwapBuffers(testCase.Window);
+        end
+
+        function swapInterval(~)
+            glfwSwapInterval(1);
         end
         
         function windowShouldClose(testCase)
