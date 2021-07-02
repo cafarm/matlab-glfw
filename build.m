@@ -81,8 +81,8 @@ fid = fopen("VERSION", "w");
 fwrite(fid, newver);
 fclose(fid);
 
-system("git commit VERSION -m 'version " + newver + "'");
-system("git tag -a v" + newver);
+system("git commit VERSION -m 'bump version to " + newver + "'");
+system("git tag -a v" + newver + "-m 'version " + newver + "'");
 end
 
 function v = nextver(type)
