@@ -35,10 +35,21 @@ matlab.addons.toolbox.toolboxVersion("toolbox.prj", v);
 matlab.addons.toolbox.packageToolbox("toolbox.prj");
 end
 
-function test()
+function test(cov)
+arguments
+    cov (1,1) logical = false
+end
 getdeps();
-results = runtests("tests", "IncludeSubfolders", true);
+args = {"tests", "IncludeSubfolders", true};
+if cov
+    args = [args {"ReportCoverageFor", "src"}];
+end
+results = runtests(args{:});
 assertSuccess(results);
+end
+
+function cov()
+test(true);
 end
 
 function ci()
