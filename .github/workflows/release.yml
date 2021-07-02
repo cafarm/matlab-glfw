@@ -71,7 +71,7 @@ jobs:
       - name: Package toolbox
         uses: matlab-actions/run-command@v1
         with:
-          command: build test, build package 1
+          command: build("package", true)
 
       - name: Create release
         id: create_release
