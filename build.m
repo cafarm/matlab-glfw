@@ -55,7 +55,7 @@ suite = testsuite("tests", "IncludeSubfolders", true);
 
 runner = TestRunner.withTextOutput("OutputDetail", Verbosity.Detailed);
 runner.addPlugin(XMLPlugin.producingJUnitFormat("results/matlab/results.xml"));
-runner.addPlugin(CodeCoveragePlugin.forFolder("src", "IncludingSubfolders", true, "Producing", CoberturaFormat("results/matlab/coverage.xml")));
+runner.addPlugin(CodeCoveragePlugin.forFolder("src", "IncludingSubfolders", true, "Producing", CoberturaFormat("coverage.xml")));
 
 results = runner.run(suite);
 assertSuccess(results);
