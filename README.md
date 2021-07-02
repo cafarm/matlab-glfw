@@ -2,7 +2,7 @@
 Work-in-progress [GLFW](https://www.glfw.org) bindings for MATLAB.
 
 ## Download
-[Download the latest packaged toolbox](http://github.com/cafarm/matlab-glfw/releases/latest/download/matlab-glfw.mltbx). The toolbox including pre-compiled GLFW binaries for Linux, macOS, and Windows. MATLAB R2019b or above required.
+[Download the latest packaged toolbox](http://github.com/cafarm/matlab-glfw/releases/latest/download/matlab-glfw.mltbx). The toolbox includes pre-compiled GLFW binaries for Linux, macOS, and Windows. MATLAB R2019b or above required.
 
 ## Example
 Below is a short example of setting up a window and OpenGL context with GLFW in MATLAB. This example was ported from the [GLFW documentation](https://www.glfw.org/documentation.html).
