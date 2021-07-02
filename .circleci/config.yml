@@ -11,7 +11,11 @@ jobs:
       image: 'ubuntu-2004:202104-01'
     steps:
       - checkout
-      - run: sudo apt-get update && sudo apt-get install xorg-dev
+      - run:
+          name: Compile GLFW
+          command: |
+            sudo apt-get update && sudo apt-get install xorg-dev
+            ./getdeps.sh
       - matlab/install:
           release: << parameters.matlab-release >>
       - matlab/run-command:
