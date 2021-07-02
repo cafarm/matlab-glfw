@@ -1,12 +1,12 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
   <configuration file="${PROJECT_ROOT}/toolbox.prj" location="${PROJECT_ROOT}" name="toolbox" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>GLFW</param.appname>
-    <param.authnamewatermark />
+    <param.authnamewatermark>GLFW</param.authnamewatermark>
     <param.email />
     <param.company />
     <param.summary>An OpenGL library</param.summary>
     <param.description>GLFW is an Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan development on the desktop. It provides a simple API for creating windows, contexts and surfaces, receiving input and events.</param.description>
-    <param.screenshot />
+    <param.screenshot>${PROJECT_ROOT}/teacup.png</param.screenshot>
     <param.version>0.0.0.0</param.version>
     <param.output>${PROJECT_ROOT}/GLFW.mltbx</param.output>
     <param.products.name />
@@ -27,7 +27,8 @@ build.m
 *.mltbx
 *.DS_Store
 results
-coverage.xml</param.exclude.filters>
+coverage.xml
+teacup.png</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
@@ -57,10 +58,8 @@ coverage.xml</param.exclude.filters>
     <param.additional.sw.mac.url />
     <param.additional.sw.linux.url />
     <unset>
-      <param.authnamewatermark />
       <param.email />
       <param.company />
-      <param.screenshot />
       <param.output />
       <param.products.name />
       <param.products.id />
