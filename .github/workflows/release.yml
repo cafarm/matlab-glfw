@@ -91,6 +91,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./matlab-glfw.mltbx
-          asset_name: matlab-glfw.mltbx
+          asset_path: ./GLFW.mltbx
+          asset_name: GLFW.mltbx
           asset_content_type: application/zip
