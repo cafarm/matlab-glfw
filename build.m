@@ -75,11 +75,13 @@ if isempty(type)
     mustBeMember(type, ["major","minor","patch"]);
 end
 newver = nextver(type);
+
 fid = fopen("VERSION", "w");
 fwrite(fid, newver);
 fclose(fid);
-disp("git add VERSION");
-disp("git tag -a v" + newver + " -m 'version " + newver + "'");
+
+system("git add VERSION");
+system("git tag -a v" + newver + " -m 'version " + newver + "'");
 end
 
 function v = nextver(type)
