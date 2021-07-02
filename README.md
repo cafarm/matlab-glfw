@@ -45,11 +45,20 @@ Constants are available under the `GLFW` class and have the same name as GLFW C 
 glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.FALSE);
 ```
 
-## Compile from source
-In MATLAB:
+## Development
+### Test
+```matlab
+>> build test
 ```
->> !git clone https://github.com/cafarm/matlab-glfw.git
->> cd matlab-glfw
->> !./getdeps.sh
->> package
+
+### Package
+```matlab
+>> build package
+```
+
+### Release
+```matlab
+>> build version
+type (major|minor|patch): minor
+>> !git push origin master --follow-tags
 ```

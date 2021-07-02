@@ -1,7 +1,9 @@
-name: Build
+name: Create release
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
   
 defaults:
   run:
@@ -41,7 +43,7 @@ jobs:
           name: ${{ matrix.computer }}
           path: deps/glfw/${{ matrix.computer }}
   
-  build-matlab-glfw:
+  release-matlab-glfw:
     runs-on: ubuntu-latest
     needs: [build-glfw]
     
@@ -69,10 +71,26 @@ jobs:
       - name: Package toolbox
         uses: matlab-actions/run-command@v1
         with:
-          command: package
+          command: build test, build package 1
 
-      - uses: actions/upload-artifact@v2
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: matlab-glfw.mltbx
-          path: matlab-glfw.mltbx
-          if-no-files-found: error
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload release asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./matlab-glfw.mltbx
+          asset_name: matlab-glfw.mltbx
+          asset_content_type: application/zip

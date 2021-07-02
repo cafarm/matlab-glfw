@@ -11,19 +11,13 @@ jobs:
       image: 'ubuntu-2004:202104-01'
     steps:
       - checkout
-      - run:
-          name: Compile GLFW
-          command: |
-            sudo apt-get update && sudo apt-get install xorg-dev
-            ./getdeps.sh
+      - run: sudo apt-get update && sudo apt-get install xorg-dev
       - matlab/install:
           release: << parameters.matlab-release >>
-      - matlab/run-tests:
-          source-folder: src
-          test-results-junit: test-results/matlab/results.xml
-          code-coverage-cobertura: coverage.xml
+      - matlab/run-command:
+          command: build ci
       - store_test_results:
-          path: test-results
+          path: results
       - codecov/upload
 workflows:
   test-matrix:
