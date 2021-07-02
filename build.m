@@ -66,7 +66,8 @@ arguments
     type string {mustBeMember(type, ["major","minor","patch"])} = string.empty()
 end
 
-if ~system("git status -s")
+[~,status] = system("git status -s");
+if ~isempty(status)
     error("'git status -s' reports changes. Commit or revert changes before bumping the version.");
 end
 
@@ -80,8 +81,8 @@ fid = fopen("VERSION", "w");
 fwrite(fid, newver);
 fclose(fid);
 
-system("git add VERSION");
-system("git tag -a v" + newver + " -m 'version " + newver + "'");
+system("git commit VERSION -m 'version " + newver + "'");
+system("git tag -a v" + newver);
 end
 
 function v = nextver(type)
