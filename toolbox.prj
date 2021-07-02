@@ -28,7 +28,8 @@ build.m
 *.DS_Store
 results
 coverage.xml
-teacup.png</param.exclude.filters>
+teacup.png
+home</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
