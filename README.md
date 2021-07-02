@@ -60,5 +60,5 @@ glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.FALSE);
 ```matlab
 >> build version
 type (major|minor|patch): minor
->> !git push origin master --follow-tags
+>> !git push origin main --follow-tags
 ```
