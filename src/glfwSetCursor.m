@@ -1,6 +1,7 @@
-function [GLFWwindowPtr, GLFWcursorPtr] = glfwSetCursor(GLFWwindowPtr, GLFWcursorPtr)
+function glfwSetCursor(window, cursor)
 arguments
-    
+    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr")}
+    cursor (1,1) {mustBeLibPointer(cursor,"GLFWcursorPtr")}
 end
-[GLFWwindowPtr, GLFWcursorPtr] = calllibglfw("glfwSetCursor", GLFWwindowPtr, GLFWcursorPtr);
+calllibglfw("glfwSetCursor", window, cursor);
 end
