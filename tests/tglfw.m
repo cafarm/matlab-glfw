@@ -1,6 +1,7 @@
 classdef tglfw < matlab.unittest.TestCase
     properties
         Window
+        Monitor
     end
     
     methods (TestClassSetup)
@@ -25,6 +26,14 @@ classdef tglfw < matlab.unittest.TestCase
             glfwWindowHint(GLFW.VISIBLE, GLFW.TRUE);
             testCase.Window = glfwCreateWindow(640, 480, "Hello World");
             if isNull(testCase.Window)
+                [code,desc] = glfwGetError();
+                testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
+            end
+        end
+
+        function getPrimaryMonitor(testCase)
+            testCase.Monitor = glfwGetPrimaryMonitor();
+            if isNull(testCase.Monitor)
                 [code,desc] = glfwGetError();
                 testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
             end
@@ -89,6 +98,21 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(value, ?double)
         end
 
+        function getKeyName(testCase)
+            name = glfwGetKeyName(GLFW.KEY_W, 0);
+            testCase.verifyClass(name, ?string)
+        end
+
+        function getKeyScancode(testCase)
+            code = glfwGetKeyScancode(GLFW.KEY_X);
+            testCase.verifyClass(code, ?double)
+        end
+
+        function getKey(testCase)
+            state = glfwGetKey(testCase.Window, GLFW.KEY_X);
+            testCase.verifyClass(state, ?double)
+        end
+
         function getCursorPos(testCase)
             [x,y] = glfwGetCursorPos(testCase.Window);
             testCase.verifyClass(x, ?double);
@@ -131,9 +155,19 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(count, ?double);
         end
 
+        function getJoystickName(testCase)
+            name = glfwGetJoystickName(GLFW.JOYSTICK_1);
+            testCase.verifyClass(name, ?string);
+        end
+
         function getJoystickGUID(testCase)
             guid = glfwGetJoystickGUID(GLFW.JOYSTICK_1);
             testCase.verifyClass(guid, ?string);
+        end
+
+        function getJoystickUserPointer(testCase)
+            pointer = glfwGetJoystickUserPointer(GLFW.JOYSTICK_1);
+            testCase.verifyClass(pointer, "lib.pointer");
         end
 
         function getGamepadName(testCase)
@@ -164,14 +198,31 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(count, ?double);
         end
 
-        function getPrimaryMonitor(testCase)
-            monitor = glfwGetPrimaryMonitor();
-            testCase.verifyClass(monitor, "lib.pointer");
+        function getMonitorPos(testCase)
+            [x,y] = glfwGetMonitorPos(testCase.Monitor);
+            testCase.verifyClass(x, ?double);
+            testCase.verifyClass(y, ?double);
+        end
+
+        function getMonitorPhysicalSize(testCase)
+            [w,h] = glfwGetMonitorPhysicalSize(testCase.Monitor);
+            testCase.verifyClass(w, ?double);
+            testCase.verifyClass(h, ?double);
+        end
+
+        function getMonitorContentScale(testCase)
+            [x,y] = glfwGetMonitorContentScale(testCase.Monitor);
+            testCase.verifyClass(x, ?double);
+            testCase.verifyClass(y, ?double);
+        end
+
+        function getMonitorName(testCase)
+            name = glfwGetMonitorName(testCase.Monitor);
+            testCase.verifyClass(name, ?string);
         end
 
         function getGammaRamp(testCase)
-            monitor = glfwGetPrimaryMonitor();
-            ramp = glfwGetGammaRamp(monitor);
+            ramp = glfwGetGammaRamp(testCase.Monitor);
             testCase.verifyClass(ramp, "lib.pointer");
         end
 
