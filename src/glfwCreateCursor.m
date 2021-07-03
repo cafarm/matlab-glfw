@@ -1,8 +1,12 @@
 function cursor = glfwCreateCursor(image, xhot, yhot)
 arguments
-    image (1,1) {mustBeLibPointer(image,"GLFWimagePtr")}
+    image (:,:,4) uint8
     xhot (1,1) int32
     yhot (1,1) int32
 end
-cursor = calllibglfw("glfwCreateCursor", image, xhot, yhot);
+imageptr = libpointer("GLFWimagePtr", struct( ...
+    "height", size(image,1), ...
+    "width", size(image,2), ...
+    "pixels", permute(image,[3,2,1])));
+cursor = calllibglfw("glfwCreateCursor", imageptr, xhot, yhot);
 end
