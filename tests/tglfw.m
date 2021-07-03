@@ -120,11 +120,7 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function createCursor(testCase)
-            image = libpointer("GLFWimagePtr");
-            image.Value.width = 16;
-            image.Value.height = 16;
-            image.Value.pixels = 0xff * ones(16,16,4,"uint8");
-            cursor = glfwCreateCursor(image, 0, 0);
+            cursor = glfwCreateCursor(0xff*ones(16,16,4,"uint8"), 0, 0);
             testCase.verifyClass(cursor, "lib.pointer");
             testCase.verifyFalse(isNull(cursor));
             glfwDestroyCursor(cursor);
