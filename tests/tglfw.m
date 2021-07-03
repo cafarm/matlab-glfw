@@ -25,6 +25,7 @@ classdef tglfw < matlab.unittest.TestCase
         function createWindow(testCase)
             glfwWindowHint(GLFW.VISIBLE, GLFW.TRUE);
             testCase.Window = glfwCreateWindow(640, 480, "Hello World");
+            testCase.fatalAssertEqual(string(testCase.Window.DataType), "GLFWwindowPtr");
             if isNull(testCase.Window)
                 [code,desc] = glfwGetError();
                 testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
@@ -33,6 +34,7 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getPrimaryMonitor(testCase)
             testCase.Monitor = glfwGetPrimaryMonitor();
+            testCase.fatalAssertEqual(string(testCase.Monitor.DataType), "GLFWmonitorPtr");
             if isNull(testCase.Monitor)
                 [code,desc] = glfwGetError();
                 testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
@@ -54,7 +56,7 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getCurrentContext(testCase)
             window = glfwGetCurrentContext();
-            testCase.verifyClass(window, "lib.pointer");
+            testCase.verifyLibPointer(window, "GLFWwindowPtr");
         end
 
         function swapInterval(~)
@@ -121,33 +123,38 @@ classdef tglfw < matlab.unittest.TestCase
 
         function createCursor(testCase)
             cursor = glfwCreateCursor(0xff*ones(16,16,4,"uint8"), 0, 0);
-            testCase.verifyClass(cursor, "lib.pointer");
+            testCase.verifyLibPointer(cursor, "GLFWcursorPtr");
             testCase.verifyFalse(isNull(cursor));
             glfwDestroyCursor(cursor);
         end
 
         function createStandardCursor(testCase)
             cursor = glfwCreateStandardCursor(GLFW.ARROW_CURSOR);
-            testCase.verifyClass(cursor, "lib.pointer");
+            testCase.verifyLibPointer(cursor, "GLFWcursorPtr");
             testCase.verifyFalse(isNull(cursor));
             glfwDestroyCursor(cursor);
         end
 
+        function setCursor(testCase)
+            cursor = glfwCreateStandardCursor(GLFW.ARROW_CURSOR);
+            glfwSetCursor(testCase.Window, cursor);
+        end
+
         function getJoystickAxes(testCase)
             [axes,count] = glfwGetJoystickAxes(GLFW.JOYSTICK_1);
-            testCase.verifyClass(axes, "lib.pointer");
+            testCase.verifyLibPointer(axes, "singlePtr");
             testCase.verifyClass(count, ?double);
         end
 
         function getJoystickButtons(testCase)
             [buttons,count] = glfwGetJoystickButtons(GLFW.JOYSTICK_1);
-            testCase.verifyClass(buttons, "lib.pointer");
+            testCase.verifyLibPointer(buttons, "uint8Ptr");
             testCase.verifyClass(count, ?double);
         end
 
         function getJoystickHats(testCase)
             [hats,count] = glfwGetJoystickHats(GLFW.JOYSTICK_1);
-            testCase.verifyClass(hats, "lib.pointer");
+            testCase.verifyLibPointer(hats, "uint8Ptr");
             testCase.verifyClass(count, ?double);
         end
 
@@ -163,7 +170,7 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getJoystickUserPointer(testCase)
             pointer = glfwGetJoystickUserPointer(GLFW.JOYSTICK_1);
-            testCase.verifyClass(pointer, "lib.pointer");
+            testCase.verifyLibPointer(pointer, "voidPtr");
         end
 
         function getGamepadName(testCase)
@@ -190,7 +197,7 @@ classdef tglfw < matlab.unittest.TestCase
         %% Monitor
         function getMonitors(testCase)
             [monitors,count] = glfwGetMonitors();
-            testCase.verifyClass(monitors, "lib.pointer");
+            testCase.verifyLibPointer(monitors, "GLFWmonitorPtr");
             testCase.verifyClass(count, ?double);
         end
 
@@ -219,7 +226,7 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getGammaRamp(testCase)
             ramp = glfwGetGammaRamp(testCase.Monitor);
-            testCase.verifyClass(ramp, "lib.pointer");
+            testCase.verifyLibPointer(ramp, "GLFWgammarampPtr");
         end
 
         %% Native
@@ -258,6 +265,13 @@ classdef tglfw < matlab.unittest.TestCase
         
         function swapBuffers(testCase)
             glfwSwapBuffers(testCase.Window);
+        end
+    end
+
+    methods
+        function verifyLibPointer(testCase, actual, type)
+            testCase.verifyClass(actual, "lib.pointer");
+            testCase.verifyEqual(string(actual.DataType), string(type));
         end
     end
 end
