@@ -397,6 +397,10 @@ classdef tglfw < matlab.unittest.TestCase
             glfwSetWindowTitle(testCase.Window, "title");
         end
 
+        function setWindowIcon(testCase)
+            glfwSetWindowIcon(testCase.Window, 0xff*ones(16,16,4,"uint8"));
+        end
+
         function getWindowPos(testCase)
             glfwSetWindowPos(testCase.Window, 100, 150);
             [x,y] = glfwGetWindowPos(testCase.Window);
