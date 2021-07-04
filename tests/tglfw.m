@@ -300,14 +300,23 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function gammaRamp(testCase)
-            in = libpointer("GLFWgammarampPtr", struct( ...
-                "red", linspace(0,65535,256), ...
-                "green", linspace(0,65535,256), ...
-                "blue", linspace(0,65535,256), ...
-                "size", 256));
-            glfwSetGammaRamp(testCase.Monitor, in);
-            out = glfwGetGammaRamp(testCase.Monitor);
-            testCase.verifyLibPointer(out, "GLFWgammarampPtr");
+            orig = glfwGetGammaRamp(testCase.Monitor);
+            new = orig;
+            new.red = flip(new.red);
+            new.green = flip(new.green);
+            new.blue = flip(new.blue);
+            glfwSetGammaRamp(testCase.Monitor, new);
+            act = glfwGetGammaRamp(testCase.Monitor);
+            testCase.verifyEqual(act, new);
+            glfwSetGammaRamp(testCase.Monitor, orig);
+        end
+
+        function setGammaRampInvalid(testCase)
+            m = testCase.Monitor;
+            testCase.verifyError(@()glfwSetGammaRamp(m,1), "GLFW:validators:mustBeValidRamp");
+            testCase.verifyError(@()glfwSetGammaRamp(m,struct), "GLFW:validators:mustBeValidRamp");
+            testCase.verifyError(@()glfwSetGammaRamp(m,struct("red",[],"green",[],"blue",[])), "GLFW:validators:mustBeValidRamp");
+            testCase.verifyError(@()glfwSetGammaRamp(m,struct("red",1,"green",1,"blue",1,"size",3)), "GLFW:validators:mustBeValidRamp");
         end
 
         %% Vulkan support
