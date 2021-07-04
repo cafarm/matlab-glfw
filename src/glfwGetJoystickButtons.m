@@ -5,7 +5,7 @@ end
 [buttons, count] = calllibglfw("glfwGetJoystickButtons", jid, libpointer("int32Ptr",0));
 if ~isNull(buttons)
     setdatatype(buttons, buttons.DataType, count);
-    buttons = double(buttons.Value);
+    buttons = double(buttons.Value');
 else
     buttons = [];
 end

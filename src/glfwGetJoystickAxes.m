@@ -5,7 +5,7 @@ end
 [axes, count] = calllibglfw("glfwGetJoystickAxes", jid, libpointer("int32Ptr",0));
 if ~isNull(axes)
     setdatatype(axes, axes.DataType, count);
-    axes = double(axes.Value);
+    axes = double(axes.Value');
 else
     axes = [];
 end
