@@ -1,9 +1,9 @@
 function mustBeLibPointer(value, type)
 arguments
     value
-    type (1,1) string
+    type string {mustBeScalarOrEmpty} = string.empty()
 end
-if ~isa(value, "lib.pointer") || ~strcmp(value.DataType, type)
+if ~isa(value, "lib.pointer") || (~isempty(type) && ~strcmp(value.DataType, type))
     error("GLFW:validators:mustBeLibPointer", "Value must be a lib.pointer of type '%s'.", type);
 end
 end

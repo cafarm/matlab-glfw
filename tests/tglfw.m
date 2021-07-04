@@ -186,7 +186,7 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function setJoystickUserPointer(~)
-            glfwSetJoystickUserPointer(GLFW.JOYSTICK_1, libpointer("voidPtr"));
+            glfwSetJoystickUserPointer(GLFW.JOYSTICK_1, libpointer("doublePtr",0));
         end
 
         function getJoystickUserPointer(testCase)
@@ -275,13 +275,12 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(name, ?string);
         end
 
-        function setMonitorUserPointer(testCase)
-            glfwSetMonitorUserPointer(testCase.Monitor, libpointer("voidPtr"));
-        end
-
-        function getMonitorUserPointer(testCase)
-            pointer = glfwGetMonitorUserPointer(testCase.Monitor);
-            testCase.verifyLibPointer(pointer, "voidPtr");
+        function monitorUserPointer(testCase)
+            in = libpointer("doublePtr", [5 10]);
+            glfwSetMonitorUserPointer(testCase.Monitor, in);
+            out = glfwGetMonitorUserPointer(testCase.Monitor);
+            setdatatype(out, "doublePtr", 2);
+            testCase.verifyEqual(out.Value', [5 10]);
         end
 
         function getVideoModes(testCase)
@@ -451,13 +450,12 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyEqual(value, GLFW.FALSE);
         end
 
-        function setWindowUserPointer(testCase)
-            glfwSetWindowUserPointer(testCase.Window, libpointer("voidPtr"));
-        end
-
-        function getWindowUserPointer(testCase)
-            pointer = glfwGetWindowUserPointer(testCase.Window);
-            testCase.verifyLibPointer(pointer, "voidPtr");
+        function windowUserPointer(testCase)
+            in = libpointer("doublePtr", [5 10]);
+            glfwSetWindowUserPointer(testCase.Window, in);
+            out = glfwGetWindowUserPointer(testCase.Window);
+            setdatatype(out, "doublePtr", 2);
+            testCase.verifyEqual(out.Value', [5 10]);
         end
         
         function pollEvents(~)
