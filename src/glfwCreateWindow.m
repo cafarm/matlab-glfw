@@ -7,4 +7,8 @@ arguments
     share (1,1) {mustBeLibPointer(share,"GLFWwindowPtr")} = libpointer("GLFWwindowPtr")
 end
 window = calllibglfw("glfwCreateWindow", width, height, char(title), monitor, share);
+if isNull(window)
+    [code,desc] = glfwGetError();
+    error("GLFW:createWindow:error", "Unable to create window (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
+end
 end

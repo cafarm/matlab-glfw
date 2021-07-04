@@ -5,13 +5,8 @@ classdef tglfw < matlab.unittest.TestCase
     end
     
     methods (TestClassSetup)
-        function init(testCase)
-            glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.TRUE);
-            success = glfwInit();
-            if ~success
-                [code,desc] = glfwGetError();
-                testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
-            end
+        function init(~)
+            glfwInit();
         end
     end
     
@@ -23,22 +18,11 @@ classdef tglfw < matlab.unittest.TestCase
     
     methods (TestMethodSetup)
         function createWindow(testCase)
-            glfwWindowHint(GLFW.VISIBLE, GLFW.TRUE);
             testCase.Window = glfwCreateWindow(640, 480, "Hello World");
-            testCase.fatalAssertEqual(string(testCase.Window.DataType), "GLFWwindowPtr");
-            if isNull(testCase.Window)
-                [code,desc] = glfwGetError();
-                testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
-            end
         end
 
         function getPrimaryMonitor(testCase)
             testCase.Monitor = glfwGetPrimaryMonitor();
-            testCase.fatalAssertEqual(string(testCase.Monitor.DataType), "GLFWmonitorPtr");
-            if isNull(testCase.Monitor)
-                [code,desc] = glfwGetError();
-                testCase.fatalAssertFail(sprintf("%d:%s",code,desc));
-            end
         end
     end
     
@@ -68,12 +52,18 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(supported, ?double);
         end
 
-        function getProcAddress(testCase)
-            address = glfwGetProcAddress("glGetDebugMessageLogARB");
-            testCase.verifyClass(address, "lib.pointer");
+        function getProcAddressThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwGetProcAddress("glGetDebugMessageLogARB"), "GLFW:getProcAddress:error");
         end
 
         %% Initialization, version and error
+        function initHint(~)
+            glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.TRUE);
+        end
+
         function getVersion(testCase)
             [major,minor,rev] = glfwGetVersion();
             testCase.log(1, sprintf("Running against GLFW %d.%d.%d", major, minor, rev));
@@ -140,11 +130,25 @@ classdef tglfw < matlab.unittest.TestCase
             glfwDestroyCursor(cursor);
         end
 
+        function createCursorThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwCreateCursor(0xff*ones(16,16,4,"uint8"), 0, 0), "GLFW:createCursor:error");
+        end
+
         function createStandardCursor(testCase)
             cursor = glfwCreateStandardCursor(GLFW.ARROW_CURSOR);
             testCase.verifyLibPointer(cursor, "GLFWcursorPtr");
             testCase.verifyFalse(isNull(cursor));
             glfwDestroyCursor(cursor);
+        end
+
+        function createStandardCursorThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwCreateStandardCursor(GLFW.ARROW_CURSOR), "GLFW:createStandardCursor:error");
         end
 
         function setCursor(testCase)
@@ -199,9 +203,15 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(isGamepad, ?double);
         end
 
-        function updateGamepadMappings(testCase)
-            successful = glfwUpdateGamepadMappings("");
-            testCase.verifyClass(successful, ?double);
+        function updateGamepadMappings(~)
+            glfwUpdateGamepadMappings("");
+        end
+
+        function updateGamepadMappingsThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwUpdateGamepadMappings(""), "GLFW:updateGamepadMappings:error");
         end
 
         function getGamepadName(testCase)
@@ -289,9 +299,23 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(count, ?double);
         end
 
+        function getVideoModesThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwGetVideoModes(testCase.Monitor), "GLFW:getVideoModes:error");
+        end
+
         function getVideoMode(testCase)
             mode = glfwGetVideoMode(testCase.Monitor);
             testCase.verifyClass(mode, ?struct);
+        end
+
+        function getVideoModeThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwGetVideoMode(testCase.Monitor), "GLFW:getVideoMode:error");
         end
 
         function setGamma(testCase)
@@ -308,6 +332,13 @@ classdef tglfw < matlab.unittest.TestCase
             act = glfwGetGammaRamp(testCase.Monitor);
             testCase.verifyEqual(act, new);
             glfwSetGammaRamp(testCase.Monitor, orig);
+        end
+
+        function getGammaRampThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwGetGammaRamp(testCase.Monitor), "GLFW:getGammaRamp:error");
         end
 
         function setGammaRampInvalid(testCase)
@@ -335,8 +366,19 @@ classdef tglfw < matlab.unittest.TestCase
             glfwDefaultWindowHints();
         end
 
+        function windowHint(~)
+            glfwWindowHint(GLFW.VISIBLE, GLFW.TRUE);
+        end
+
         function windowHintString(~)
             glfwWindowHintString(GLFW.COCOA_FRAME_NAME, "");
+        end
+
+        function createWindowThrows(testCase)
+            glfwTerminate();
+            testCase.Window = libpointer("GLFWwindowPtr");
+            init = onCleanup(@glfwInit);
+            testCase.verifyError(@()glfwCreateWindow(640,480,"t"), "GLFW:createWindow:error");
         end
 
         function windowShouldClose(testCase)

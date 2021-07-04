@@ -3,8 +3,9 @@ arguments
     monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr"), mustBeNonnull}
 end
 pmode = calllibglfw("glfwGetVideoMode", monitor);
-mode = pmode.Value;
 if isNull(pmode)
-    mode = mode([]);
+    [code,desc] = glfwGetError();
+    error("GLFW:getVideoMode:error", "Unable to get video mode (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
 end
+mode = pmode.Value;
 end

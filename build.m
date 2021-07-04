@@ -42,6 +42,9 @@ end
 getdeps();
 args = {"tests", "IncludeSubfolders", true};
 if cov
+    if libisloaded("libglfw")
+        unloadlibrary("libglfw");
+    end
     args = [args {"ReportCoverageFor", "src"}];
 end
 results = runtests(args{:});

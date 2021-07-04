@@ -293,5 +293,36 @@ classdef GLFW
         COCOA_MENUBAR                   = double(0x00051002)
         DONT_CARE                       = -1
     end
+
+    methods (Static)
+        function id = errorID(value)
+            switch value
+                case GLFW.NO_ERROR
+                    id = "GLFW_NO_ERROR";
+                case GLFW.NOT_INITIALIZED
+                    id = "GLFW_NOT_INITIALIZED";
+                case GLFW.NO_CURRENT_CONTEXT
+                    id = "GLFW_NO_CURRENT_CONTEXT";
+                case GLFW.INVALID_ENUM
+                    id = "GLFW_INVALID_ENUM";
+                case GLFW.INVALID_VALUE
+                    id = "GLFW_INVALID_VALUE";
+                case GLFW.OUT_OF_MEMORY
+                    id = "GLFW_OUT_OF_MEMORY";
+                case GLFW.API_UNAVAILABLE
+                    id = "GLFW_API_UNAVAILABLE";
+                case GLFW.VERSION_UNAVAILABLE
+                    id = "GLFW_VERSION_UNAVAILABLE";
+                case GLFW.PLATFORM_ERROR
+                    id = "GLFW_PLATFORM_ERROR";
+                case GLFW.FORMAT_UNAVAILABLE
+                    id = "GLFW_FORMAT_UNAVAILABLE";
+                case GLFW.NO_WINDOW_CONTEXT
+                    id = "GLFW_NO_WINDOW_CONTEXT";
+                otherwise
+                    id = "UNKNOWN";
+            end
+        end
+    end
 end
 

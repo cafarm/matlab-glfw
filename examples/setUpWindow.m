@@ -1,16 +1,10 @@
 % Ported from https://www.glfw.org/documentation.html
 
 % Initialize the library
-if ~glfwInit()
-    error("failed to initialize library");
-end
+glfwInit();
 
 % Create a windowed mode window and its OpenGL context
 window = glfwCreateWindow(640, 480, "Hello World");
-if isNull(window)
-    glfwTerminate();
-    error("failed to create window");
-end
 
 % Make the window's context current
 glfwMakeContextCurrent(window);
