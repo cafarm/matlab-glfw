@@ -323,7 +323,13 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function gammaRamp(testCase)
-            orig = glfwGetGammaRamp(testCase.Monitor);
+            try
+                orig = glfwGetGammaRamp(testCase.Monitor);
+            catch e
+                if strcmp(e.identifier, "GLFW:getGammaRamp:GLFW_PLATFORM_ERROR")
+                    testCase.assumeFail(e.message);
+                end
+            end
             new = orig;
             new.red = flip(new.red);
             new.green = flip(new.green);
