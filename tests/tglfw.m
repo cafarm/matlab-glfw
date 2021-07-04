@@ -64,13 +64,13 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function extensionSupported(testCase)
-            avail = glfwExtensionSupported("GL_ARB_debug_output");
-            testCase.verifyClass(avail, ?double);
+            supported = glfwExtensionSupported("GL_ARB_debug_output");
+            testCase.verifyClass(supported, ?double);
         end
 
         function getProcAddress(testCase)
-            addr = glfwGetProcAddress("glGetDebugMessageLogARB");
-            testCase.verifyClass(addr, "lib.pointer");
+            address = glfwGetProcAddress("glGetDebugMessageLogARB");
+            testCase.verifyClass(address, "lib.pointer");
         end
 
         %% Initialization, version and error
@@ -95,30 +95,42 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         %% Input
-        function getInputMode(testCase)
+        function inputMode(testCase)
+            glfwSetInputMode(testCase.Window, GLFW.CURSOR, GLFW.CURSOR_HIDDEN);
             value = glfwGetInputMode(testCase.Window, GLFW.CURSOR);
-            testCase.verifyClass(value, ?double)
+            testCase.verifyEqual(value, GLFW.CURSOR_HIDDEN);
+        end
+
+        function rawMouseMotionSupported(testCase)
+            supported = glfwRawMouseMotionSupported();
+            testCase.verifyClass(supported, ?double);
         end
 
         function getKeyName(testCase)
             name = glfwGetKeyName(GLFW.KEY_W, 0);
-            testCase.verifyClass(name, ?string)
+            testCase.verifyClass(name, ?string);
         end
 
         function getKeyScancode(testCase)
             code = glfwGetKeyScancode(GLFW.KEY_X);
-            testCase.verifyClass(code, ?double)
+            testCase.verifyClass(code, ?double);
         end
 
         function getKey(testCase)
             state = glfwGetKey(testCase.Window, GLFW.KEY_X);
-            testCase.verifyClass(state, ?double)
+            testCase.verifyClass(state, ?double);
         end
 
-        function getCursorPos(testCase)
+        function getMouseButton(testCase)
+            state = glfwGetMouseButton(testCase.Window, GLFW.MOUSE_BUTTON_LEFT);
+            testCase.verifyClass(state, ?double);
+        end
+
+        function cursorPos(testCase)
+            glfwSetCursorPos(testCase.Window, 5, 10);
             [x,y] = glfwGetCursorPos(testCase.Window);
-            testCase.verifyClass(x, ?double);
-            testCase.verifyClass(y, ?double);
+            testCase.verifyEqual(x, 5);
+            testCase.verifyEqual(y, 10);
         end
 
         function createCursor(testCase)
@@ -138,6 +150,11 @@ classdef tglfw < matlab.unittest.TestCase
         function setCursor(testCase)
             cursor = glfwCreateStandardCursor(GLFW.ARROW_CURSOR);
             glfwSetCursor(testCase.Window, cursor);
+        end
+
+        function joystickPresent(testCase)
+            present = glfwJoystickPresent(GLFW.JOYSTICK_1);
+            testCase.verifyClass(present, ?double);
         end
 
         function getJoystickAxes(testCase)
@@ -168,9 +185,23 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(guid, ?string);
         end
 
+        function setJoystickUserPointer(~)
+            glfwSetJoystickUserPointer(GLFW.JOYSTICK_1, libpointer("voidPtr"));
+        end
+
         function getJoystickUserPointer(testCase)
             pointer = glfwGetJoystickUserPointer(GLFW.JOYSTICK_1);
             testCase.verifyLibPointer(pointer, "voidPtr");
+        end
+
+        function joystickIsGamepad(testCase)
+            isGamepad = glfwJoystickIsGamepad(GLFW.JOYSTICK_1);
+            testCase.verifyClass(isGamepad, ?double);
+        end
+
+        function updateGamepadMappings(testCase)
+            successful = glfwUpdateGamepadMappings("");
+            testCase.verifyClass(successful, ?double);
         end
 
         function getGamepadName(testCase)
@@ -184,14 +215,26 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(state, ?struct);
         end
 
-        function getClipboardString(testCase)
+        function clipboardString(testCase)
+            glfwSetClipboardString(testCase.Window, "clip");
             contents = glfwGetClipboardString(testCase.Window);
-            testCase.verifyClass(contents, ?string);
+            testCase.verifyEqual(contents, "clip");
         end
 
-        function getTime(testCase)
+        function time(testCase)
+            glfwSetTime(100);
             time = glfwGetTime();
-            testCase.verifyClass(time, ?double);
+            testCase.verifyGreaterThanOrEqual(time, 100);
+        end
+
+        function getTimerValue(testCase)
+            value = glfwGetTimerValue();
+            testCase.verifyClass(value, ?double);
+        end
+
+        function getTimerFrequency(testCase)
+            freq = glfwGetTimerFrequency();
+            testCase.verifyClass(freq, ?double);
         end
 
         %% Monitor
@@ -205,6 +248,14 @@ classdef tglfw < matlab.unittest.TestCase
             [x,y] = glfwGetMonitorPos(testCase.Monitor);
             testCase.verifyClass(x, ?double);
             testCase.verifyClass(y, ?double);
+        end
+
+        function getMonitorWorkarea(testCase)
+            [x,y,w,h] = glfwGetMonitorWorkarea(testCase.Monitor);
+            testCase.verifyClass(x, ?double);
+            testCase.verifyClass(y, ?double);
+            testCase.verifyClass(w, ?double);
+            testCase.verifyClass(h, ?double);
         end
 
         function getMonitorPhysicalSize(testCase)
@@ -224,29 +275,87 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(name, ?string);
         end
 
-        function getGammaRamp(testCase)
+        function setMonitorUserPointer(testCase)
+            glfwSetMonitorUserPointer(testCase.Monitor, libpointer("voidPtr"));
+        end
+
+        function getMonitorUserPointer(testCase)
+            pointer = glfwGetMonitorUserPointer(testCase.Monitor);
+            testCase.verifyLibPointer(pointer, "voidPtr");
+        end
+
+        function getVideoModes(testCase)
+            [modes,count] = glfwGetVideoModes(testCase.Monitor);
+            testCase.verifyLibPointer(modes, "GLFWvidmodePtr");
+            testCase.verifyClass(count, ?double);
+        end
+
+        function getVideoMode(testCase)
+            mode = glfwGetVideoMode(testCase.Monitor);
+            testCase.verifyLibPointer(mode, "GLFWvidmodePtr");
+        end
+
+        function setGamma(testCase)
+            glfwSetGamma(testCase.Monitor, 1);
+        end
+
+        function gammaRamp(testCase)
             ramp = glfwGetGammaRamp(testCase.Monitor);
+            glfwSetGammaRamp(testCase.Monitor, ramp);
             testCase.verifyLibPointer(ramp, "GLFWgammarampPtr");
         end
 
-        %% Native
-
         %% Vulkan support
+        function vulkanSupported(testCase)
+            supported = glfwVulkanSupported();
+            testCase.verifyClass(supported, ?double);
+        end
+
+        function getRequiredInstanceExtensions(testCase)
+            [names,count] = glfwGetRequiredInstanceExtensions();
+            testCase.verifyLibPointer(names, "stringPtrPtr");
+            testCase.verifyClass(count, ?double);
+        end
 
         %% Window
         function defaultWindowHints(~)
             glfwDefaultWindowHints();
         end
 
-        function windowShouldClose(testCase)
-            flag = glfwWindowShouldClose(testCase.Window);
-            testCase.verifyEqual(flag, 0);
+        function windowHintString(~)
+            glfwWindowHintString(GLFW.COCOA_FRAME_NAME, "");
         end
 
-        function glfwGetWindowSize(testCase)
+        function windowShouldClose(testCase)
+            glfwSetWindowShouldClose(testCase.Window, GLFW.TRUE);
+            flag = glfwWindowShouldClose(testCase.Window);
+            testCase.verifyEqual(flag, GLFW.TRUE);
+        end
+
+        function setWindowTitle(testCase)
+            glfwSetWindowTitle(testCase.Window, "title");
+        end
+
+        function getWindowPos(testCase)
+            glfwSetWindowPos(testCase.Window, 100, 150);
+            [x,y] = glfwGetWindowPos(testCase.Window);
+            testCase.verifyEqual(x, 100);
+            testCase.verifyEqual(y, 150);
+        end
+
+        function windowSize(testCase)
+            glfwSetWindowSize(testCase.Window, 100, 150);
             [width,height] = glfwGetWindowSize(testCase.Window);
-            testCase.verifyEqual(width, 640);
-            testCase.verifyEqual(height, 480);
+            testCase.verifyEqual(width, 100);
+            testCase.verifyEqual(height, 150);
+        end
+
+        function setWindowSizeLimits(testCase)
+            glfwSetWindowSizeLimits(testCase.Window, 200, 200, 400, 400);
+        end
+
+        function setWindowAspectRatio(testCase)
+            glfwSetWindowAspectRatio(testCase.Window, 16, 9);
         end
 
         function getFramebufferSize(testCase)
@@ -255,12 +364,106 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(height, ?double);
         end
 
+        function getWindowFrameSize(testCase)
+            [l,t,r,b] = glfwGetWindowFrameSize(testCase.Window);
+            testCase.verifyClass(l, ?double);
+            testCase.verifyClass(t, ?double);
+            testCase.verifyClass(r, ?double);
+            testCase.verifyClass(b, ?double);
+        end
+
+        function getWindowContentScale(testCase)
+            [x,y] = glfwGetWindowContentScale(testCase.Window);
+            testCase.verifyClass(x, ?double);
+            testCase.verifyClass(y, ?double);
+        end
+
+        function windowOpacity(testCase)
+            glfwSetWindowOpacity(testCase.Window, 0.5);
+            opac = glfwGetWindowOpacity(testCase.Window);
+            testCase.verifyEqual(opac, 0.5);
+        end
+
+        function iconifyWindow(testCase)
+            glfwIconifyWindow(testCase.Window);
+            value = glfwGetWindowAttrib(testCase.Window, GLFW.ICONIFIED);
+            testCase.verifyEqual(value, GLFW.TRUE);
+        end
+
+        function restoreWindow(testCase)
+            glfwIconifyWindow(testCase.Window);
+            glfwRestoreWindow(testCase.Window);
+            value = glfwGetWindowAttrib(testCase.Window, GLFW.ICONIFIED);
+            testCase.verifyEqual(value, GLFW.FALSE);
+        end
+
+        function maximizeWindow(testCase)
+            glfwMaximizeWindow(testCase.Window);
+            value = glfwGetWindowAttrib(testCase.Window, GLFW.MAXIMIZED);
+            testCase.verifyEqual(value, GLFW.TRUE);
+        end
+
+        function showWindow(testCase)
+            glfwHideWindow(testCase.Window);
+            glfwShowWindow(testCase.Window);
+            value = glfwGetWindowAttrib(testCase.Window, GLFW.VISIBLE);
+            testCase.verifyEqual(value, GLFW.TRUE);
+        end
+
+        function hideWindow(testCase)
+            glfwHideWindow(testCase.Window);
+            value = glfwGetWindowAttrib(testCase.Window, GLFW.VISIBLE);
+            testCase.verifyEqual(value, GLFW.FALSE);
+        end
+
         function focusWindow(testCase)
             glfwFocusWindow(testCase.Window);
+            value = glfwGetWindowAttrib(testCase.Window, GLFW.FOCUSED);
+            testCase.verifyEqual(value, GLFW.TRUE);
+        end
+
+        function requestWindowAttention(testCase)
+            glfwRequestWindowAttention(testCase.Window);
+        end
+
+        function getWindowMonitor(testCase)
+            monitor = glfwGetWindowMonitor(testCase.Window);
+            testCase.verifyLibPointer(monitor, "GLFWmonitorPtr");
+        end
+
+        function setWindowMonitor(testCase)
+            glfwSetWindowMonitor(testCase.Window, testCase.Monitor, 0, 0, 640, 480, 60);
+        end
+
+        function windowAttrib(testCase)
+            glfwSetWindowAttrib(testCase.Window, GLFW.RESIZABLE, GLFW.FALSE);
+            value = glfwGetWindowAttrib(testCase.Window, GLFW.RESIZABLE);
+            testCase.verifyEqual(value, GLFW.FALSE);
+        end
+
+        function setWindowUserPointer(testCase)
+            glfwSetWindowUserPointer(testCase.Window, libpointer("voidPtr"));
+        end
+
+        function getWindowUserPointer(testCase)
+            pointer = glfwGetWindowUserPointer(testCase.Window);
+            testCase.verifyLibPointer(pointer, "voidPtr");
         end
         
         function pollEvents(~)
             glfwPollEvents();
+        end
+
+        function waitEvents(~)
+            glfwWaitEvents();
+        end
+
+        function waitEventsTimeout(~)
+            glfwWaitEventsTimeout(0.7);
+        end
+
+        function postEmptyEvent(~)
+            glfwPostEmptyEvent();
         end
         
         function swapBuffers(testCase)

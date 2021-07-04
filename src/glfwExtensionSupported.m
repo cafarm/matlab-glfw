@@ -1,7 +1,7 @@
-function available = glfwExtensionSupported(extension)
+function supported = glfwExtensionSupported(extension)
 arguments
     extension (1,1) string
 end
-available = calllibglfw("glfwExtensionSupported", char(extension));
-available = double(available);
+supported = calllibglfw("glfwExtensionSupported", char(extension));
+supported = double(supported);
 end
