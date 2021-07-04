@@ -1,6 +1,6 @@
 function [xpos, ypos] = glfwGetMonitorPos(monitor)
 arguments
-    monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr")}
+    monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr"), mustBeNonnull}
 end
 [~, xpos, ypos] = calllibglfw("glfwGetMonitorPos", monitor, libpointer("int32Ptr",0), libpointer("int32Ptr",0));
 xpos = double(xpos);

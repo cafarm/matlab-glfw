@@ -1,6 +1,6 @@
 function state = glfwGetMouseButton(window, button)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr")}
+    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
     button (1,1) int32
 end
 state = calllibglfw("glfwGetMouseButton", window, button);

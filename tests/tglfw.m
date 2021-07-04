@@ -159,19 +159,19 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getJoystickAxes(testCase)
             [axes,count] = glfwGetJoystickAxes(GLFW.JOYSTICK_1);
-            testCase.verifyLibPointer(axes, "singlePtr");
+            testCase.verifyClass(axes, ?double);
             testCase.verifyClass(count, ?double);
         end
 
         function getJoystickButtons(testCase)
             [buttons,count] = glfwGetJoystickButtons(GLFW.JOYSTICK_1);
-            testCase.verifyLibPointer(buttons, "uint8Ptr");
+            testCase.verifyClass(buttons, ?double);
             testCase.verifyClass(count, ?double);
         end
 
         function getJoystickHats(testCase)
             [hats,count] = glfwGetJoystickHats(GLFW.JOYSTICK_1);
-            testCase.verifyLibPointer(hats, "uint8Ptr");
+            testCase.verifyClass(hats, ?double);
             testCase.verifyClass(count, ?double);
         end
 
@@ -216,8 +216,8 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function clipboardString(testCase)
-            glfwSetClipboardString(testCase.Window, "clip");
-            contents = glfwGetClipboardString(testCase.Window);
+            glfwSetClipboardString("clip");
+            contents = glfwGetClipboardString();
             testCase.verifyEqual(contents, "clip");
         end
 
@@ -286,13 +286,13 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getVideoModes(testCase)
             [modes,count] = glfwGetVideoModes(testCase.Monitor);
-            testCase.verifyLibPointer(modes, "GLFWvidmodePtr");
+            testCase.verifyClass(modes, ?struct);
             testCase.verifyClass(count, ?double);
         end
 
         function getVideoMode(testCase)
             mode = glfwGetVideoMode(testCase.Monitor);
-            testCase.verifyLibPointer(mode, "GLFWvidmodePtr");
+            testCase.verifyClass(mode, ?struct);
         end
 
         function setGamma(testCase)
@@ -383,8 +383,13 @@ classdef tglfw < matlab.unittest.TestCase
             testCase.verifyClass(y, ?double);
         end
 
-        function windowOpacity(testCase)
+        function setWindowOpacity(testCase)
             glfwSetWindowOpacity(testCase.Window, 0.5);
+        end
+
+        function getWindowOpacity(testCase)
+            opacity = glfwGetWindowOpacity(testCase.Window);
+            testCase.verifyClass(opacity, ?double);
         end
 
         function iconifyWindow(testCase)
@@ -428,7 +433,7 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function setWindowMonitor(testCase)
-            glfwSetWindowMonitor(testCase.Window, testCase.Monitor, 0, 0, 640, 480, 60);
+            glfwSetWindowMonitor(testCase.Window, 0, 0, 640, 480, 60);
         end
 
         function windowAttrib(testCase)

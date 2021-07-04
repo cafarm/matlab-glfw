@@ -1,6 +1,6 @@
 function [left, top, right, bottom] = glfwGetWindowFrameSize(window)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr")}
+    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
 end
 [~, left, top, right, bottom] = calllibglfw("glfwGetWindowFrameSize", window, libpointer("int32Ptr",0), libpointer("int32Ptr",0), libpointer("int32Ptr",0), libpointer("int32Ptr",0));
 left = double(left);
