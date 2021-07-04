@@ -1,7 +1,7 @@
 # matlab-glfw [![cafarm](https://circleci.com/gh/cafarm/matlab-glfw.svg?style=svg)](https://app.circleci.com/pipelines/github/cafarm/matlab-glfw) [![codecov](https://codecov.io/gh/cafarm/matlab-glfw/branch/main/graph/badge.svg?token=IXB5XNSA10)](https://codecov.io/gh/cafarm/matlab-glfw)
-GLFW bindings for MATLAB. From glfw.org:
+GLFW bindings for MATLAB. From [glfw.org](https://www.glfw.org):
 
-    GLFW is an Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan development on the desktop. It provides a simple API for creating windows, contexts and surfaces, receiving input and events.
+> GLFW is an Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan development on the desktop. It provides a simple API for creating windows, contexts and surfaces, receiving input and events.
 
 ## Download
 [Download the latest packaged toolbox](http://github.com/cafarm/matlab-glfw/releases/latest/download/GLFW.mltbx). The toolbox includes pre-compiled GLFW binaries for Linux, macOS, and Windows. MATLAB R2019b or above required.
@@ -33,7 +33,7 @@ glfwTerminate();
 ```
 
 ## Documentation
-The [standard GLFW documentation](https://www.glfw.org/documentation.html) is still applicable for learning to use GLFW in MATLAB. Differences between the C and MATLAB API are noted below.
+The [standard GLFW documentation](https://www.glfw.org/documentation.html) is still applicable to learn GLFW in MATLAB. Differences between the C and MATLAB API are noted below.
 
 ## Differences with GLFW in C
 In general, the MATLAB and C GLFW API are identical except for the following exceptions.
