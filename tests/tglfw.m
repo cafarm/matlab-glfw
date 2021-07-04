@@ -300,9 +300,14 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function gammaRamp(testCase)
-            ramp = glfwGetGammaRamp(testCase.Monitor);
-            glfwSetGammaRamp(testCase.Monitor, ramp);
-            testCase.verifyLibPointer(ramp, "GLFWgammarampPtr");
+            in = libpointer("GLFWgammarampPtr", struct( ...
+                "red", linspace(0,65535,256), ...
+                "green", linspace(0,65535,256), ...
+                "blue", linspace(0,65535,256), ...
+                "size", 256));
+            glfwSetGammaRamp(testCase.Monitor, in);
+            out = glfwGetGammaRamp(testCase.Monitor);
+            testCase.verifyLibPointer(out, "GLFWgammarampPtr");
         end
 
         %% Vulkan support
