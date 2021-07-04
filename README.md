@@ -92,19 +92,19 @@ C functions input arguments that may be set to `NULL` are moved to the end of th
 
 ```matlab
 % MATLAB
-% specify monitor
+% Specify monitor
 glfwSetWindowMonitor(window, xpos, ypos, width, height, monitor);
 
-% do not specify monitor
+% Do not specify monitor
 glfwSetWindowMonitor(window, xpos, ypos, width, height);
 ```
 
 ```c
 // C
-// specify monitor 
+// Specify monitor 
 glfwSetWindowMonitor(window, monitor, xpos, ypos, width, height);
 
-// do not specify monitor
+// Do not specify monitor
 glfwSetWindowMonitor(window, NULL, xpos, ypos, width, height);
 ```
 
