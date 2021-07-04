@@ -56,7 +56,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwGetProcAddress("glGetDebugMessageLogARB"), "GLFW:getProcAddress:error");
+            testCase.verifyError(@()glfwGetProcAddress("glGetDebugMessageLogARB"), "GLFW:getProcAddress:GLFW_NOT_INITIALIZED");
         end
 
         %% Initialization, version and error
@@ -134,7 +134,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwCreateCursor(0xff*ones(16,16,4,"uint8"), 0, 0), "GLFW:createCursor:error");
+            testCase.verifyError(@()glfwCreateCursor(0xff*ones(16,16,4,"uint8"), 0, 0), "GLFW:createCursor:GLFW_NOT_INITIALIZED");
         end
 
         function createStandardCursor(testCase)
@@ -148,7 +148,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwCreateStandardCursor(GLFW.ARROW_CURSOR), "GLFW:createStandardCursor:error");
+            testCase.verifyError(@()glfwCreateStandardCursor(GLFW.ARROW_CURSOR), "GLFW:createStandardCursor:GLFW_NOT_INITIALIZED");
         end
 
         function setCursor(testCase)
@@ -211,7 +211,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwUpdateGamepadMappings(""), "GLFW:updateGamepadMappings:error");
+            testCase.verifyError(@()glfwUpdateGamepadMappings(""), "GLFW:updateGamepadMappings:GLFW_NOT_INITIALIZED");
         end
 
         function getGamepadName(testCase)
@@ -303,7 +303,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwGetVideoModes(testCase.Monitor), "GLFW:getVideoModes:error");
+            testCase.verifyError(@()glfwGetVideoModes(testCase.Monitor), "GLFW:getVideoModes:GLFW_NOT_INITIALIZED");
         end
 
         function getVideoMode(testCase)
@@ -315,7 +315,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwGetVideoMode(testCase.Monitor), "GLFW:getVideoMode:error");
+            testCase.verifyError(@()glfwGetVideoMode(testCase.Monitor), "GLFW:getVideoMode:GLFW_NOT_INITIALIZED");
         end
 
         function setGamma(testCase)
@@ -338,7 +338,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwGetGammaRamp(testCase.Monitor), "GLFW:getGammaRamp:error");
+            testCase.verifyError(@()glfwGetGammaRamp(testCase.Monitor), "GLFW:getGammaRamp:GLFW_NOT_INITIALIZED");
         end
 
         function setGammaRampInvalid(testCase)
@@ -378,7 +378,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = libpointer("GLFWwindowPtr");
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwCreateWindow(640,480,"t"), "GLFW:createWindow:error");
+            testCase.verifyError(@()glfwCreateWindow(640,480,"t"), "GLFW:createWindow:GLFW_NOT_INITIALIZED");
         end
 
         function windowShouldClose(testCase)

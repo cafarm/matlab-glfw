@@ -5,7 +5,8 @@ end
 pmode = calllibglfw("glfwGetVideoMode", monitor);
 if isNull(pmode)
     [code,desc] = glfwGetError();
-    error("GLFW:getVideoMode:error", "Unable to get video mode (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
+    id = GLFW.errorID(code);
+    error("GLFW:getVideoMode:" + id, "Unable to get video mode (%s). %s", id, strjoin(desc, "."));
 end
 mode = pmode.Value;
 end

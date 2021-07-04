@@ -5,6 +5,7 @@ end
 success = calllibglfw("glfwUpdateGamepadMappings", char(str));
 if double(success) == GLFW.FALSE
     [code,desc] = glfwGetError();
-    error("GLFW:updateGamepadMappings:error", "Unable to update gamepad mappings (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
+    id = GLFW.errorID(code);
+    error("GLFW:updateGamepadMappings:" + id, "Unable to update gamepad mappings (%s). %s", id, strjoin(desc, "."));
 end
 end

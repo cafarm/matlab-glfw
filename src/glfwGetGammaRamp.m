@@ -5,7 +5,8 @@ end
 pramp = calllibglfw("glfwGetGammaRamp", monitor);
 if isNull(pramp)
     [code,desc] = glfwGetError();
-    error("GLFW:getGammaRamp:error", "Unable to get gamma ramp (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
+    id = GLFW.errorID(code);
+    error("GLFW:getGammaRamp:" + id, "Unable to get gamma ramp (%s). %s", id, strjoin(desc, "."));
 end
 ramp = pramp.Value;
 setdatatype(ramp.red, ramp.red.DataType, ramp.size);

@@ -11,6 +11,7 @@ pimage = libpointer("GLFWimagePtr", struct( ...
 cursor = calllibglfw("glfwCreateCursor", pimage, xhot, yhot);
 if isNull(cursor)
     [code,desc] = glfwGetError();
-    error("GLFW:createCursor:error", "Unable to create cursor (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
+    id = GLFW.errorID(code);
+    error("GLFW:createCursor:" + id, "Unable to create cursor (%s). %s", id, strjoin(desc, "."));
 end
 end

@@ -5,6 +5,7 @@ end
 cursor = calllibglfw("glfwCreateStandardCursor", shape);
 if isNull(cursor)
     [code,desc] = glfwGetError();
-    error("GLFW:createStandardCursor:error", "Unable to create cursor (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
+    id = GLFW.errorID(code);
+    error("GLFW:createStandardCursor:" + id, "Unable to create cursor (%s). %s", id, strjoin(desc, "."));
 end
 end

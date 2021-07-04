@@ -9,6 +9,7 @@ end
 window = calllibglfw("glfwCreateWindow", width, height, char(title), monitor, share);
 if isNull(window)
     [code,desc] = glfwGetError();
-    error("GLFW:createWindow:error", "Unable to create window (%s). %s", GLFW.errorID(code), strjoin(desc, "."));
+    id = GLFW.errorID(code);
+    error("GLFW:createWindow:" + id, "Unable to create window (%s). %s", id, strjoin(desc, "."));
 end
 end
