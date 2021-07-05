@@ -38,6 +38,12 @@ classdef tglfw < matlab.unittest.TestCase
             glfwMakeContextCurrent(testCase.Window);
         end
 
+        function makeContextCurrentValidates(testCase)
+            testCase.verifyError(@()glfwMakeContextCurrent(1), "GLFW:validators:mustBeLibPointer");
+            testCase.verifyError(@()glfwMakeContextCurrent(libpointer("int32Ptr",0)), "GLFW:validators:mustBeLibPointer");
+            testCase.verifyError(@()glfwMakeContextCurrent(libpointer("GLFWwindowPtr")), "GLFW:validators:mustBeNonnull");
+        end
+
         function getCurrentContext(testCase)
             window = glfwGetCurrentContext();
             testCase.verifyLibPointer(window, "GLFWwindowPtr");

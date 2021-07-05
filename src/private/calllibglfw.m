@@ -18,7 +18,7 @@ end
 end
 
 function p = libglfwPath()
-rootFolder = fileparts(fileparts(mfilename("fullpath")));
+rootFolder = fileparts(fileparts(fileparts(mfilename("fullpath"))));
 glfwFolder = fullfile(rootFolder, "deps", "glfw", lower(computer("arch")));
 if ispc
     libFolder = fullfile(glfwFolder, "bin");
