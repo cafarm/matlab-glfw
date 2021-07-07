@@ -33,13 +33,10 @@ glfwTerminate();
 ```
 
 ## Documentation
-The [standard GLFW documentation](https://www.glfw.org/documentation.html) is still applicable to learn GLFW in MATLAB. Differences between the C and MATLAB API are noted below.
-
-## Differences with GLFW in C
-In general, the MATLAB and C GLFW API are identical except for the following exceptions.
+The standard [GLFW documentation](https://www.glfw.org/docs/latest/) is applicable to learn GLFW in MATLAB. Differences between the MATLAB and C API are noted below.
 
 ### Constants
-C constants are available under the `GLFW` class and have the same name minus the `GLFW_` prefix.
+C constants are available in MATLAB under the `GLFW` class and have the same name minus the `GLFW_` prefix.
 
 ```matlab
 % MATLAB
@@ -51,12 +48,12 @@ glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.FALSE);
 glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
 ```
 
-### Automatic error handling
-C functions that return `NULL` pointers or `GLFW_FALSE` *solely* to indicate an error, instead throw an error in MATLAB.
+### Error handling
+C functions that return `NULL` pointers or `GLFW_FALSE` *solely* to indicate an error instead throw an exception in MATLAB.
 
 ```matlab
 % MATLAB
-glfwInit(); % throws if error occurs
+glfwInit(); % throws exception if error occurs
 ```
 
 ```c
@@ -65,7 +62,7 @@ if (!glfwInit()) // must manually handle error condition
     // handle error
 ```
 
-### Automatic marshalling
+### Marshalling
 Non-opaque C structs are automatically marshalled to and from MATLAB structs.
 
 ```
