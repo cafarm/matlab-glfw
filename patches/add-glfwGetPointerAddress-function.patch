@@ -1,0 +1,52 @@
+From 245c098a39d1f70ff926afe36b5cb762072d7a6b Mon Sep 17 00:00:00 2001
+From: Mark Cafaro <mark.cafaro@gmail.com>
+Date: Tue, 6 Jul 2021 21:31:44 -0400
+Subject: [PATCH] Add glfwGetPointerAddress function
+
+---
+ include/GLFW/glfw3.h | 16 ++++++++++++++++
+ src/init.c           |  4 ++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/include/GLFW/glfw3.h b/include/GLFW/glfw3.h
+index c8d7cfa..d40d44d 100644
+--- a/include/GLFW/glfw3.h
++++ b/include/GLFW/glfw3.h
+@@ -1994,6 +1994,22 @@ GLFWAPI int glfwGetError(const char** description);
+  */
+ GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun callback);
+ 
++/*! @brief Returns the address of the specified pointer.
++ *
++ *  This function returns the address of the specified pointer. It is useful
++ *  for transferring a lib.pointer to a MEX function in MATLAB.
++ *
++ *  @param[in] ptr The pointer to get the address of.
++ *  @return The address of the pointer, encoded as an intptr_t.
++ *
++ *  @thread_safety This function may be called from any thread.
++ *
++ *  @since Added by patch.
++ *
++ *  @ingroup init
++ */
++GLFWAPI intptr_t glfwGetPointerAddress(void* ptr);
++
+ /*! @brief Returns the currently connected monitors.
+  *
+  *  This function returns an array of handles for all currently connected
+diff --git a/src/init.c b/src/init.c
+index e44d0ca..f2aa413 100644
+--- a/src/init.c
++++ b/src/init.c
+@@ -338,3 +338,7 @@ GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
+     return cbfun;
+ }
+ 
++GLFWAPI intptr_t glfwGetPointerAddress(void* ptr)
++{
++    return (intptr_t)ptr;
++}
+-- 
+2.30.1 (Apple Git-130)
+
