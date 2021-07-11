@@ -415,7 +415,7 @@ public:
             {
                 ObjectArray callback = parseCallback(inputs[2]);
                 function<void(GLFWwindow* window, int pathCount, const char* paths[])> lambdaCallback = [=](GLFWwindow* window, int pathCount, const char* paths[]) {
-                    StringArray pathArray = factory.createArray<MATLABString>({1,(uint)pathCount});
+                    StringArray pathArray = factory.createArray<MATLABString>({1,(uint64_t)pathCount});
                     for (size_t i = 0; i < pathCount; i++) {
                         pathArray[i] = paths[i];
                     }
