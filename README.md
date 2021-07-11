@@ -4,7 +4,7 @@ GLFW bindings for MATLAB. From [glfw.org](https://www.glfw.org):
 > GLFW is an Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan development on the desktop. It provides a simple API for creating windows, contexts and surfaces, receiving input and events.
 
 ## Download
-[Download the latest packaged toolbox](http://github.com/cafarm/matlab-glfw/releases/latest/download/GLFW.mltbx). The toolbox includes pre-compiled GLFW binaries for Linux, macOS, and Windows. MATLAB R2019b or above required.
+[Download the latest packaged toolbox](http://github.com/cafarm/matlab-glfw/releases/latest/download/GLFW.mltbx). The toolbox includes pre-compiled GLFW binaries for Linux, macOS, and Windows. MATLAB R2020a or above required.
 
 ## Example
 Below is a short example of setting up a window and OpenGL context with GLFW in MATLAB. This example was ported from the [GLFW documentation](https://www.glfw.org/documentation.html).
@@ -80,6 +80,27 @@ ramp =
 
 >> ramp.red = flip(ramp.red);
 >> glfwSetGammaRamp(monitor, ramp);
+```
+
+C function pointers are automatically marshalled to and from MATLAB function handles.
+
+```matlab
+% MATLAB
+glfwSetErrorCallback(@errorCallback)
+
+function errorCallback(code, description)
+    disp(code + ":" + description);
+end
+```
+
+```c
+// C
+glfwSetErrorCallback(errorCallback);
+
+void errorCallback(int code, const char* description)
+{
+    displayErrorMessage(code, description);
+}
 ```
 
 All numeric values are converted to `double` in MATLAB.

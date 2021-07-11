@@ -1,13 +1,15 @@
-classdef tcalllibglfw < matlab.unittest.TestCase
+classdef tglfwRegisterCallback < matlab.unittest.TestCase
     properties (TestParameter)
         FuncName = allFuncNames();
     end
     
     methods (Test)
-        function glfwFuncCallsLibglfw(testCase, FuncName)
+        function glfwFuncCallsRegisterCallback(testCase, FuncName)
             import matlab.unittest.constraints.Matches;
             contents = fileread(fullfile(srcFolder, FuncName + ".m"));
-            testCase.verifyThat(contents, Matches(sprintf('calllibglfw([ ]*"%s"', FuncName)));
+            type = replace(FuncName, ["glfwSet", "Callback"], "");
+            type = [lower(type(1)) type(2:end)]; 
+            testCase.verifyThat(contents, Matches(sprintf('glfwRegisterCallback([ ]*"%s"', type)));
         end
     end
 end
@@ -15,9 +17,8 @@ end
 function n = allFuncNames()
 listing = dir(fullfile(srcFolder, "glfw*"));
 n = string({listing.name});
-n(n=="GLFW.m") = [];
 n = replace(n, ".m", "");
-n(endsWith(n,"Callback")) = [];
+n(~endsWith(n,"Callback")) = [];
 n = cellstr(n);
 end
 
