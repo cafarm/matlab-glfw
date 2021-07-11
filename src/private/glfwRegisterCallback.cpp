@@ -666,7 +666,7 @@ public:
     {
         if (array.getType() != ArrayType::HANDLE_OBJECT_REF)
             error("GLFW:registerCallback:invalidCallback",
-            "Callback must be a function handle or empty.");
+            "Callback must be a function handle.");
 
         return array;
     }
