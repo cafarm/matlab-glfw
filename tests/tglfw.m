@@ -5,8 +5,10 @@ classdef tglfw < matlab.unittest.TestCase
     end
     
     methods (TestClassSetup)
-        function init(~)
+        function init(testCase)
             glfwInit();
+            previousCallback = glfwSetErrorCallback(@(c,d)fprintf("%d:%s\n",c,d));
+            testCase.addTeardown(@()glfwSetErrorCallback(previousCallback));
         end
     end
     
@@ -91,9 +93,12 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function setErrorCallback(testCase)
+            clear glfwSetErrorCallback;
             testCase.verifyError(@()glfwSetErrorCallback(@()[]), "GLFW:validators:mustBeCallback");
-            glfwSetErrorCallback(@(c,d)disp("called"));
-            glfwSetErrorCallback();
+            callback = @(c,d)disp("called");
+            testCase.verifyEmpty(glfwSetErrorCallback(callback));
+            previousCallback = glfwSetErrorCallback();
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         %% Input
@@ -170,50 +175,66 @@ classdef tglfw < matlab.unittest.TestCase
 
         function setKeyCallback(testCase)
             testCase.verifyError(@()glfwSetKeyCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetKeyCallback(testCase.Window, @(w,k,c,a,m)disp("called"));
-            glfwSetKeyCallback(testCase.Window);
+            callback = @(w,k,c,a,m)disp("called");
+            testCase.verifyEmpty(glfwSetKeyCallback(testCase.Window, callback));
+            previousCallback = glfwSetKeyCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setCharCallback(testCase)
             testCase.verifyError(@()glfwSetCharCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetCharCallback(testCase.Window, @(w,p)disp("called"));
-            glfwSetCharCallback(testCase.Window);
+            callback = @(w,p)disp("called");
+            testCase.verifyEmpty(glfwSetCharCallback(testCase.Window, callback));
+            previousCallback = glfwSetCharCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setCharModsCallback(testCase)
             testCase.verifyError(@()glfwSetCharModsCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetCharModsCallback(testCase.Window, @(w,p,m)disp("called"));
-            glfwSetCharModsCallback(testCase.Window);
+            callback = @(w,p,m)disp("called");
+            testCase.verifyEmpty(glfwSetCharModsCallback(testCase.Window, callback));
+            previousCallback = glfwSetCharModsCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setMouseButtonCallback(testCase)
             testCase.verifyError(@()glfwSetMouseButtonCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetMouseButtonCallback(testCase.Window, @(w,b,a,m)disp("called"));
-            glfwSetMouseButtonCallback(testCase.Window);
+            callback = @(w,b,a,m)disp("called");
+            testCase.verifyEmpty(glfwSetMouseButtonCallback(testCase.Window, callback));
+            previousCallback = glfwSetMouseButtonCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setCursorPosCallback(testCase)
             testCase.verifyError(@()glfwSetCursorPosCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetCursorPosCallback(testCase.Window, @(w,x,y)disp("called"));
-            glfwSetCursorPosCallback(testCase.Window);
+            callback = @(w,x,y)disp("called");
+            testCase.verifyEmpty(glfwSetCursorPosCallback(testCase.Window, callback));
+            previousCallback = glfwSetCursorPosCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setCursorEnterCallback(testCase)
             testCase.verifyError(@()glfwSetCursorEnterCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetCursorEnterCallback(testCase.Window, @(w,e)disp("called"));
-            glfwSetCursorEnterCallback(testCase.Window);
+            callback = @(w,e)disp("called");
+            testCase.verifyEmpty(glfwSetCursorEnterCallback(testCase.Window, callback));
+            previousCallback = glfwSetCursorEnterCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setScrollCallback(testCase)
             testCase.verifyError(@()glfwSetScrollCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetScrollCallback(testCase.Window, @(w,x,y)disp("called"));
-            glfwSetScrollCallback(testCase.Window);
+            callback = @(w,x,y)disp("called");
+            testCase.verifyEmpty(glfwSetScrollCallback(testCase.Window, callback));
+            previousCallback = glfwSetScrollCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setDropCallback(testCase)
             testCase.verifyError(@()glfwSetDropCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetDropCallback(testCase.Window, @(w,c,p)disp("called"));
-            glfwSetDropCallback(testCase.Window);
+            callback = @(w,c,p)disp("called");
+            testCase.verifyEmpty(glfwSetDropCallback(testCase.Window, callback));
+            previousCallback = glfwSetDropCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function joystickPresent(testCase)
@@ -265,8 +286,10 @@ classdef tglfw < matlab.unittest.TestCase
 
         function setJoystickCallback(testCase)
             testCase.verifyError(@()glfwSetJoystickCallback(@()[]), "GLFW:validators:mustBeCallback");
-            glfwSetJoystickCallback(@(j,e)disp("called"));
-            glfwSetJoystickCallback();
+            callback = @(j,e)disp("called");
+            testCase.verifyEmpty(glfwSetJoystickCallback(callback));
+            previousCallback = glfwSetJoystickCallback();
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function updateGamepadMappings(~)
@@ -361,8 +384,10 @@ classdef tglfw < matlab.unittest.TestCase
 
         function setMonitorCallback(testCase)
             testCase.verifyError(@()glfwSetMonitorCallback(@()[]), "GLFW:validators:mustBeCallback");
-            glfwSetMonitorCallback(@(m,e)disp("called"));
-            glfwSetMonitorCallback();
+            callback = @(m,e)disp("called");
+            testCase.verifyEmpty(glfwSetMonitorCallback(callback));
+            previousCallback = glfwSetMonitorCallback();
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function getVideoModes(testCase)
@@ -584,56 +609,74 @@ classdef tglfw < matlab.unittest.TestCase
 
         function setWindowPosCallback(testCase)
             testCase.verifyError(@()glfwSetWindowPosCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowPosCallback(testCase.Window, @(w,x,y)disp("called"));
-            glfwSetWindowPosCallback(testCase.Window);
+            callback = @(w,x,y)disp("called");
+            testCase.verifyEmpty(glfwSetWindowPosCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowPosCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setWindowSizeCallback(testCase)
             testCase.verifyError(@()glfwSetWindowSizeCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowSizeCallback(testCase.Window, @(w,wt,h)disp("called"));
-            glfwSetWindowSizeCallback(testCase.Window);
+            callback = @(w,wt,h)disp("called");
+            testCase.verifyEmpty(glfwSetWindowSizeCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowSizeCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setWindowCloseCallback(testCase)
             testCase.verifyError(@()glfwSetWindowCloseCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowCloseCallback(testCase.Window, @(w)disp("called"));
-            glfwSetWindowCloseCallback(testCase.Window);
+            callback = @(w)disp("called");
+            testCase.verifyEmpty(glfwSetWindowCloseCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowCloseCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setWindowRefreshCallback(testCase)
             testCase.verifyError(@()glfwSetWindowRefreshCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowRefreshCallback(testCase.Window, @(w)disp("called"));
-            glfwSetWindowRefreshCallback(testCase.Window);
+            callback = @(w)disp("called");
+            testCase.verifyEmpty(glfwSetWindowRefreshCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowRefreshCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setWindowFocusCallback(testCase)
             testCase.verifyError(@()glfwSetWindowFocusCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowFocusCallback(testCase.Window, @(w,f)disp("called"));
-            glfwSetWindowFocusCallback(testCase.Window);
+            callback = @(w,f)disp("called");
+            testCase.verifyEmpty(glfwSetWindowFocusCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowFocusCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setWindowIconifyCallback(testCase)
             testCase.verifyError(@()glfwSetWindowIconifyCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowIconifyCallback(testCase.Window, @(w,i)disp("called"));
-            glfwSetWindowIconifyCallback(testCase.Window);
+            callback = @(w,i)disp("called");
+            testCase.verifyEmpty(glfwSetWindowIconifyCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowIconifyCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setWindowMaximizeCallback(testCase)
             testCase.verifyError(@()glfwSetWindowMaximizeCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowMaximizeCallback(testCase.Window, @(w,m)disp("called"));
-            glfwSetWindowMaximizeCallback(testCase.Window);
+            callback = @(w,m)disp("called");
+            testCase.verifyEmpty(glfwSetWindowMaximizeCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowMaximizeCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setFramebufferSizeCallback(testCase)
             testCase.verifyError(@()glfwSetFramebufferSizeCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetFramebufferSizeCallback(testCase.Window, @(w,wt,h)disp("called"));
-            glfwSetFramebufferSizeCallback(testCase.Window);
+            callback = @(w,wt,h)disp("called");
+            testCase.verifyEmpty(glfwSetFramebufferSizeCallback(testCase.Window, callback));
+            previousCallback = glfwSetFramebufferSizeCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
 
         function setWindowContentScaleCallback(testCase)
             testCase.verifyError(@()glfwSetWindowContentScaleCallback(testCase.Window, @()[]), "GLFW:validators:mustBeCallback");
-            glfwSetWindowContentScaleCallback(testCase.Window, @(w,x,y)disp("called"));
-            glfwSetWindowContentScaleCallback(testCase.Window);
+            callback = @(w,x,y)disp("called");
+            testCase.verifyEmpty(glfwSetWindowContentScaleCallback(testCase.Window, callback));
+            previousCallback = glfwSetWindowContentScaleCallback(testCase.Window);
+            testCase.verifyEqual(previousCallback, callback);
         end
         
         function pollEvents(~)

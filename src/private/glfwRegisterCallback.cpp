@@ -32,180 +32,180 @@ static void errorCallbackFunctionHelper(int code, const char* description) {
     errorCallbackFunction(code, description);
 }
 
-static void glfwSetErrorCallback(function<void(int code, const char* description)> callback) {
+static GLFWerrorfun glfwSetErrorCallback(function<void(int code, const char* description)> callback) {
     errorCallbackFunction = callback;
-    glfwSetErrorCallback(errorCallbackFunctionHelper);
+    return glfwSetErrorCallback(errorCallbackFunctionHelper);
 }
 
 static void keyCallbackFunctionHelper(GLFWwindow* window, int key, int scancode, int action, int mods) {
     keyCallbackFunction[window](window, key, scancode, action, mods);
 }
 
-static void glfwSetKeyCallback(GLFWwindow* window, function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback) {
+static GLFWkeyfun glfwSetKeyCallback(GLFWwindow* window, function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback) {
     keyCallbackFunction[window] = callback;
-    glfwSetKeyCallback(window, keyCallbackFunctionHelper);
+    return glfwSetKeyCallback(window, keyCallbackFunctionHelper);
 }
 
 static void charCallbackFunctionHelper(GLFWwindow* window, unsigned int codepoint) {
     charCallbackFunction[window](window, codepoint);
 }
 
-static void glfwSetCharCallback(GLFWwindow* window, function<void(GLFWwindow* window, unsigned int codepoint)> callback) {
+static GLFWcharfun glfwSetCharCallback(GLFWwindow* window, function<void(GLFWwindow* window, unsigned int codepoint)> callback) {
     charCallbackFunction[window] = callback;
-    glfwSetCharCallback(window, charCallbackFunctionHelper);
+    return glfwSetCharCallback(window, charCallbackFunctionHelper);
 }
 
 static void charModsCallbackFunctionHelper(GLFWwindow* window, unsigned int codepoint, int mods) {
     charModsCallbackFunction[window](window, codepoint, mods);
 }
 
-static void glfwSetCharModsCallback(GLFWwindow* window, function<void(GLFWwindow* window, unsigned int codepoint, int mods)> callback) {
+static GLFWcharmodsfun glfwSetCharModsCallback(GLFWwindow* window, function<void(GLFWwindow* window, unsigned int codepoint, int mods)> callback) {
     charModsCallbackFunction[window] = callback;
-    glfwSetCharModsCallback(window, charModsCallbackFunctionHelper);
+    return glfwSetCharModsCallback(window, charModsCallbackFunctionHelper);
 }
 
 static void mouseButtonCallbackFunctionHelper(GLFWwindow* window, int button, int action, int mods) {
     mouseButtonCallbackFunction[window](window, button, action, mods);
 }
 
-static void glfwSetMouseButtonCallback(GLFWwindow* window, function<void(GLFWwindow* window, int button, int action, int mods)> callback) {
+static GLFWmousebuttonfun glfwSetMouseButtonCallback(GLFWwindow* window, function<void(GLFWwindow* window, int button, int action, int mods)> callback) {
     mouseButtonCallbackFunction[window] = callback;
-    glfwSetMouseButtonCallback(window, mouseButtonCallbackFunctionHelper);
+    return glfwSetMouseButtonCallback(window, mouseButtonCallbackFunctionHelper);
 }
 
 static void cursorPosCallbackFunctionHelper(GLFWwindow* window, double xpos, double ypos) {
     cursorPosCallbackFunction[window](window, xpos, ypos);
 }
 
-static void glfwSetCursorPosCallback(GLFWwindow* window, function<void(GLFWwindow* window, double xpos, double ypos)> callback) {
+static GLFWcursorposfun glfwSetCursorPosCallback(GLFWwindow* window, function<void(GLFWwindow* window, double xpos, double ypos)> callback) {
     cursorPosCallbackFunction[window] = callback;
-    glfwSetCursorPosCallback(window, cursorPosCallbackFunctionHelper);
+    return glfwSetCursorPosCallback(window, cursorPosCallbackFunctionHelper);
 }
 
 static void cursorEnterCallbackFunctionHelper(GLFWwindow* window, int entered) {
     cursorEnterCallbackFunction[window](window, entered);
 }
 
-static void glfwSetCursorEnterCallback(GLFWwindow* window, function<void(GLFWwindow* window, int entered)> callback) {
+static GLFWcursorenterfun glfwSetCursorEnterCallback(GLFWwindow* window, function<void(GLFWwindow* window, int entered)> callback) {
     cursorEnterCallbackFunction[window] = callback;
-    glfwSetCursorEnterCallback(window, cursorEnterCallbackFunctionHelper);
+    return glfwSetCursorEnterCallback(window, cursorEnterCallbackFunctionHelper);
 }
 
 static void scrollCallbackFunctionHelper(GLFWwindow* window, double xoffset, double yoffset) {
     scrollCallbackFunction[window](window, xoffset, yoffset);
 }
 
-static void glfwSetScrollCallback(GLFWwindow* window, function<void(GLFWwindow* window, double xoffset, double yoffset)> callback) {
+static GLFWscrollfun glfwSetScrollCallback(GLFWwindow* window, function<void(GLFWwindow* window, double xoffset, double yoffset)> callback) {
     scrollCallbackFunction[window] = callback;
-    glfwSetScrollCallback(window, scrollCallbackFunctionHelper);
+    return glfwSetScrollCallback(window, scrollCallbackFunctionHelper);
 }
 
 static void dropCallbackFunctionHelper(GLFWwindow* window, int pathCount, const char* paths[]) {
     dropCallbackFunction[window](window, pathCount, paths);
 }
 
-static void glfwSetDropCallback(GLFWwindow* window, function<void(GLFWwindow* window, int pathCount, const char* paths[])> callback) {
+static GLFWdropfun glfwSetDropCallback(GLFWwindow* window, function<void(GLFWwindow* window, int pathCount, const char* paths[])> callback) {
     dropCallbackFunction[window] = callback;
-    glfwSetDropCallback(window, dropCallbackFunctionHelper);
+    return glfwSetDropCallback(window, dropCallbackFunctionHelper);
 }
 
 static void joystickCallbackFunctionHelper(int jid, int event) {
     joystickCallbackFunction(jid, event);
 }
 
-static void glfwSetJoystickCallback(function<void(int jid, int event)> callback) {
+static GLFWjoystickfun glfwSetJoystickCallback(function<void(int jid, int event)> callback) {
     joystickCallbackFunction = callback;
-    glfwSetJoystickCallback(joystickCallbackFunctionHelper);
+    return glfwSetJoystickCallback(joystickCallbackFunctionHelper);
 }
 
 static void monitorCallbackFunctionHelper(GLFWmonitor* monitor, int event) {
     monitorCallbackFunction(monitor, event);
 }
 
-static void glfwSetMonitorCallback(function<void(GLFWmonitor* monitor, int event)> callback) {
+static GLFWmonitorfun glfwSetMonitorCallback(function<void(GLFWmonitor* monitor, int event)> callback) {
     monitorCallbackFunction = callback;
-    glfwSetMonitorCallback(monitorCallbackFunctionHelper);
+    return glfwSetMonitorCallback(monitorCallbackFunctionHelper);
 }
 
 static void windowPosCallbackFunctionHelper(GLFWwindow* window, int xpos, int ypos) {
     windowPosCallbackFunction[window](window, xpos, ypos);
 }
 
-static void glfwSetWindowPosCallback(GLFWwindow* window, function<void(GLFWwindow* window, int xpos, int ypos)> callback) {
+static GLFWwindowposfun glfwSetWindowPosCallback(GLFWwindow* window, function<void(GLFWwindow* window, int xpos, int ypos)> callback) {
     windowPosCallbackFunction[window] = callback;
-    glfwSetWindowPosCallback(window, windowPosCallbackFunctionHelper);
+    return glfwSetWindowPosCallback(window, windowPosCallbackFunctionHelper);
 }
 
 static void windowSizeCallbackFunctionHelper(GLFWwindow* window, int width, int height) {
     windowSizeCallbackFunction[window](window, width, height);
 }
 
-static void glfwSetWindowSizeCallback(GLFWwindow* window, function<void(GLFWwindow* window, int width, int height)> callback) {
+static GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, function<void(GLFWwindow* window, int width, int height)> callback) {
     windowSizeCallbackFunction[window] = callback;
-    glfwSetWindowSizeCallback(window, windowSizeCallbackFunctionHelper);
+    return glfwSetWindowSizeCallback(window, windowSizeCallbackFunctionHelper);
 }
 
 static void windowCloseCallbackFunctionHelper(GLFWwindow* window) {
     windowCloseCallbackFunction[window](window);
 }
 
-static void glfwSetWindowCloseCallback(GLFWwindow* window, function<void(GLFWwindow* window)> callback) {
+static GLFWwindowclosefun glfwSetWindowCloseCallback(GLFWwindow* window, function<void(GLFWwindow* window)> callback) {
     windowCloseCallbackFunction[window] = callback;
-    glfwSetWindowCloseCallback(window, windowCloseCallbackFunctionHelper);
+    return glfwSetWindowCloseCallback(window, windowCloseCallbackFunctionHelper);
 }
 
 static void windowRefreshCallbackFunctionHelper(GLFWwindow* window) {
     windowRefreshCallbackFunction[window](window);
 }
 
-static void glfwSetWindowRefreshCallback(GLFWwindow* window, function<void(GLFWwindow* window)> callback) {
+static GLFWwindowrefreshfun glfwSetWindowRefreshCallback(GLFWwindow* window, function<void(GLFWwindow* window)> callback) {
     windowRefreshCallbackFunction[window] = callback;
-    glfwSetWindowRefreshCallback(window, windowRefreshCallbackFunctionHelper);
+    return glfwSetWindowRefreshCallback(window, windowRefreshCallbackFunctionHelper);
 }
 
 static void windowFocusCallbackFunctionHelper(GLFWwindow* window, int focused) {
     windowFocusCallbackFunction[window](window, focused);
 }
 
-static void glfwSetWindowFocusCallback(GLFWwindow* window, function<void(GLFWwindow* window, int focused)> callback) {
+static GLFWwindowfocusfun glfwSetWindowFocusCallback(GLFWwindow* window, function<void(GLFWwindow* window, int focused)> callback) {
     windowFocusCallbackFunction[window] = callback;
-    glfwSetWindowFocusCallback(window, windowFocusCallbackFunctionHelper);
+    return glfwSetWindowFocusCallback(window, windowFocusCallbackFunctionHelper);
 }
 
 static void windowIconifyCallbackFunctionHelper(GLFWwindow* window, int iconified) {
     windowIconifyCallbackFunction[window](window, iconified);
 }
 
-static void glfwSetWindowIconifyCallback(GLFWwindow* window, function<void(GLFWwindow* window, int iconified)> callback) {
+static GLFWwindowiconifyfun glfwSetWindowIconifyCallback(GLFWwindow* window, function<void(GLFWwindow* window, int iconified)> callback) {
     windowIconifyCallbackFunction[window] = callback;
-    glfwSetWindowIconifyCallback(window, windowIconifyCallbackFunctionHelper);
+    return glfwSetWindowIconifyCallback(window, windowIconifyCallbackFunctionHelper);
 }
 
 static void windowMaximizeCallbackFunctionHelper(GLFWwindow* window, int maximized) {
     windowMaximizeCallbackFunction[window](window, maximized);
 }
 
-static void glfwSetWindowMaximizeCallback(GLFWwindow* window, function<void(GLFWwindow* window, int maximized)> callback) {
+static GLFWwindowmaximizefun glfwSetWindowMaximizeCallback(GLFWwindow* window, function<void(GLFWwindow* window, int maximized)> callback) {
     windowMaximizeCallbackFunction[window] = callback;
-    glfwSetWindowMaximizeCallback(window, windowMaximizeCallbackFunctionHelper);
+    return glfwSetWindowMaximizeCallback(window, windowMaximizeCallbackFunctionHelper);
 }
 
 static void framebufferSizeCallbackFunctionHelper(GLFWwindow* window, int width, int height) {
     framebufferSizeCallbackFunction[window](window, width, height);
 }
 
-static void glfwSetFramebufferSizeCallback(GLFWwindow* window, function<void(GLFWwindow* window, int width, int height)> callback) {
+static GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window, function<void(GLFWwindow* window, int width, int height)> callback) {
     framebufferSizeCallbackFunction[window] = callback;
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallbackFunctionHelper);
+    return glfwSetFramebufferSizeCallback(window, framebufferSizeCallbackFunctionHelper);
 }
 
 static void windowContentScaleCallbackFunctionHelper(GLFWwindow* window, float xscale, float yscale) {
     windowContentScaleCallbackFunction[window](window, xscale, yscale);
 }
 
-static void glfwSetWindowContentScaleCallback(GLFWwindow* window, function<void(GLFWwindow* window, float xscale, float yscale)> callback) {
+static GLFWwindowcontentscalefun glfwSetWindowContentScaleCallback(GLFWwindow* window, function<void(GLFWwindow* window, float xscale, float yscale)> callback) {
     windowContentScaleCallbackFunction[window] = callback;
-    glfwSetWindowContentScaleCallback(window, windowContentScaleCallbackFunctionHelper);
+    return glfwSetWindowContentScaleCallback(window, windowContentScaleCallbackFunctionHelper);
 }
 
 class MexFunction : public Function 
@@ -216,24 +216,47 @@ private:
 public:
     ~MexFunction()
     {
-        glfwTerminate(); // easiest way to remove all callbacks
+        glfwSetErrorCallback(nullptr);
+        glfwSetJoystickCallback(nullptr);
+        glfwSetMonitorCallback(nullptr);
+        glfwTerminate(); // easiest way to remove all window callbacks
         errorCallbackFunction = nullptr;
+        keyCallbackFunction.clear();
+        charCallbackFunction.clear();
+        charModsCallbackFunction.clear();
+        mouseButtonCallbackFunction.clear();
+        cursorPosCallbackFunction.clear();
         cursorEnterCallbackFunction.clear();
+        scrollCallbackFunction.clear();
+        dropCallbackFunction.clear();
+        joystickCallbackFunction = nullptr;
+        monitorCallbackFunction = nullptr;
+        windowPosCallbackFunction.clear();
+        windowSizeCallbackFunction.clear();
+        windowCloseCallbackFunction.clear();
+        windowRefreshCallbackFunction.clear();
+        windowFocusCallbackFunction.clear();
+        windowIconifyCallbackFunction.clear();
+        windowMaximizeCallbackFunction.clear();
+        framebufferSizeCallbackFunction.clear();
+        windowContentScaleCallbackFunction.clear();
     }
 
     void operator()(ArgumentList outputs, ArgumentList inputs) 
     {
-        if (inputs.size() < 2)
+        if (inputs.size() < 2 || outputs.size() > 1)
             error("GLFW:registerCallback:usage", 
-            "Usage: glfwRegisterCallback(type, arg1, ..., argN)");
+            "Usage: previousCallback = glfwRegisterCallback(type, arg1, ..., argN)");
 
         string type = parseType(inputs[0]);
+        intptr_t previousCallback;
         
         if (type == "error")
         {
+            GLFWerrorfun pc;
             if (inputs[1].isEmpty()) 
             {
-                glfwSetErrorCallback(nullptr);
+                pc = glfwSetErrorCallback(nullptr);
                 errorCallbackFunction = nullptr;
             }
             else
@@ -242,32 +265,17 @@ public:
                 function<void(int code, const char* description)> lambdaCallback = [=](int code, const char* description) {
                     fevalAsync({callback, factory.createScalar(code), factory.createScalar(description)});
                 };
-                glfwSetErrorCallback(lambdaCallback);
+                pc = glfwSetErrorCallback(lambdaCallback);
             }
-        }
-        else if (type == "char")
-        {
-            GLFWwindow* window = parseWindow(inputs[1]);
-            if (inputs[2].isEmpty()) 
-            {
-                glfwSetCharCallback(window, nullptr);
-                charCallbackFunction.erase(window);
-            }
-            else
-            {
-                ObjectArray callback = parseCallback(inputs[2]);
-                function<void(GLFWwindow* window, unsigned int codepoint)> lambdaCallback = [=](GLFWwindow* window, unsigned int codepoint) {
-                    fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(codepoint)});
-                };
-                glfwSetCharCallback(window, lambdaCallback);
-            }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "key")
         {
+            GLFWkeyfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetKeyCallback(window, nullptr);
+                pc = glfwSetKeyCallback(window, nullptr);
                 keyCallbackFunction.erase(window);
             }
             else
@@ -276,15 +284,36 @@ public:
                 function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> lambdaCallback = [=](GLFWwindow* window, int key, int scancode, int action, int mods) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(key), factory.createScalar(scancode), factory.createScalar(action), factory.createScalar(mods)});
                 };
-                glfwSetKeyCallback(window, lambdaCallback);
+                pc = glfwSetKeyCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
-        else if (type == "charMods")
+        else if (type == "char")
         {
+            GLFWcharfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetCharModsCallback(window, nullptr);
+                pc = glfwSetCharCallback(window, nullptr);
+                charCallbackFunction.erase(window);
+            }
+            else
+            {
+                ObjectArray callback = parseCallback(inputs[2]);
+                function<void(GLFWwindow* window, unsigned int codepoint)> lambdaCallback = [=](GLFWwindow* window, unsigned int codepoint) {
+                    fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(codepoint)});
+                };
+                pc = glfwSetCharCallback(window, lambdaCallback);
+            }
+            previousCallback = (intptr_t)pc;
+        }
+        else if (type == "charMods")
+        {
+            GLFWcharmodsfun pc;
+            GLFWwindow* window = parseWindow(inputs[1]);
+            if (inputs[2].isEmpty()) 
+            {
+                pc = glfwSetCharModsCallback(window, nullptr);
                 charModsCallbackFunction.erase(window);
             }
             else
@@ -293,15 +322,17 @@ public:
                 function<void(GLFWwindow* window, unsigned int codepoint, int mods)> lambdaCallback = [=](GLFWwindow* window, unsigned int codepoint, int mods) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(codepoint), factory.createScalar(mods)});
                 };
-                glfwSetCharModsCallback(window, lambdaCallback);
+                pc = glfwSetCharModsCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "mouseButton")
         {
+            GLFWmousebuttonfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetMouseButtonCallback(window, nullptr);
+                pc = glfwSetMouseButtonCallback(window, nullptr);
                 mouseButtonCallbackFunction.erase(window);
             }
             else
@@ -310,15 +341,17 @@ public:
                 function<void(GLFWwindow* window, int button, int action, int mods)> lambdaCallback = [=](GLFWwindow* window, int button, int action, int mods) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(button), factory.createScalar(action), factory.createScalar(mods)});
                 };
-                glfwSetMouseButtonCallback(window, lambdaCallback);
+                pc = glfwSetMouseButtonCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "cursorPos")
         {
+            GLFWcursorposfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetCursorPosCallback(window, nullptr);
+                pc = glfwSetCursorPosCallback(window, nullptr);
                 cursorPosCallbackFunction.erase(window);
             }
             else
@@ -327,15 +360,17 @@ public:
                 function<void(GLFWwindow* window, double xpos, double ypos)> lambdaCallback = [=](GLFWwindow* window, double xpos, double ypos) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(xpos), factory.createScalar(ypos)});
                 };
-                glfwSetCursorPosCallback(window, lambdaCallback);
+                pc = glfwSetCursorPosCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "cursorEnter")
         {
+            GLFWcursorenterfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetCursorEnterCallback(window, nullptr);
+                pc = glfwSetCursorEnterCallback(window, nullptr);
                 cursorEnterCallbackFunction.erase(window);
             }
             else
@@ -344,15 +379,17 @@ public:
                 function<void(GLFWwindow* window, int entered)> lambdaCallback = [=](GLFWwindow* window, int entered) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(entered)});
                 };
-                glfwSetCursorEnterCallback(window, lambdaCallback);
+                pc = glfwSetCursorEnterCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "scroll")
         {
+            GLFWscrollfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetScrollCallback(window, nullptr);
+                pc = glfwSetScrollCallback(window, nullptr);
                 scrollCallbackFunction.erase(window);
             }
             else
@@ -361,15 +398,17 @@ public:
                 function<void(GLFWwindow* window, double xoffset, double yoffset)> lambdaCallback = [=](GLFWwindow* window, double xoffset, double yoffset) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(xoffset), factory.createScalar(yoffset)});
                 };
-                glfwSetScrollCallback(window, lambdaCallback);
+                pc = glfwSetScrollCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "drop")
         {
+            GLFWdropfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetDropCallback(window, nullptr);
+                pc = glfwSetDropCallback(window, nullptr);
                 dropCallbackFunction.erase(window);
             }
             else
@@ -382,14 +421,16 @@ public:
                     }
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(pathCount), pathArray});
                 };
-                glfwSetDropCallback(window, lambdaCallback);
+                pc = glfwSetDropCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "joystick")
         {
+            GLFWjoystickfun pc;
             if (inputs[1].isEmpty()) 
             {
-                glfwSetJoystickCallback(nullptr);
+                pc = glfwSetJoystickCallback(nullptr);
                 joystickCallbackFunction = nullptr;
             }
             else
@@ -398,14 +439,16 @@ public:
                 function<void(int jid, int event)> lambdaCallback = [=](int jid, int event) {
                     fevalAsync({callback, factory.createScalar(jid), factory.createScalar(event)});
                 };
-                glfwSetJoystickCallback(lambdaCallback);
+                pc = glfwSetJoystickCallback(lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "monitor")
         {
+            GLFWmonitorfun pc;
             if (inputs[1].isEmpty()) 
             {
-                glfwSetMonitorCallback(nullptr);
+                pc = glfwSetMonitorCallback(nullptr);
                 monitorCallbackFunction = nullptr;
             }
             else
@@ -414,15 +457,17 @@ public:
                 function<void(GLFWmonitor* monitor, int event)> lambdaCallback = [=](GLFWmonitor* monitor, int event) {
                     fevalAsync({callback, factory.createScalar((int64_t)monitor), factory.createScalar(event)});
                 };
-                glfwSetMonitorCallback(lambdaCallback);
+                pc = glfwSetMonitorCallback(lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowPos")
         {
+            GLFWwindowposfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowPosCallback(window, nullptr);
+                pc = glfwSetWindowPosCallback(window, nullptr);
                 windowPosCallbackFunction.erase(window);
             }
             else
@@ -431,15 +476,17 @@ public:
                 function<void(GLFWwindow* window, int xpos, int ypos)> lambdaCallback = [=](GLFWwindow* window, int xpos, int ypos) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(xpos), factory.createScalar(ypos)});
                 };
-                glfwSetWindowPosCallback(window, lambdaCallback);
+                pc = glfwSetWindowPosCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowSize")
         {
+            GLFWwindowsizefun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowSizeCallback(window, nullptr);
+                pc = glfwSetWindowSizeCallback(window, nullptr);
                 windowSizeCallbackFunction.erase(window);
             }
             else
@@ -448,15 +495,17 @@ public:
                 function<void(GLFWwindow* window, int width, int height)> lambdaCallback = [=](GLFWwindow* window, int width, int height) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(width), factory.createScalar(height)});
                 };
-                glfwSetWindowSizeCallback(window, lambdaCallback);
+                pc = glfwSetWindowSizeCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowClose")
         {
+            GLFWwindowclosefun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowCloseCallback(window, nullptr);
+                pc = glfwSetWindowCloseCallback(window, nullptr);
                 windowCloseCallbackFunction.erase(window);
             }
             else
@@ -465,15 +514,17 @@ public:
                 function<void(GLFWwindow* window)> lambdaCallback = [=](GLFWwindow* window) {
                     fevalAsync({callback, factory.createScalar((int64_t)window)});
                 };
-                glfwSetWindowCloseCallback(window, lambdaCallback);
+                pc = glfwSetWindowCloseCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowRefresh")
         {
+            GLFWwindowrefreshfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowRefreshCallback(window, nullptr);
+                pc = glfwSetWindowRefreshCallback(window, nullptr);
                 windowRefreshCallbackFunction.erase(window);
             }
             else
@@ -482,15 +533,17 @@ public:
                 function<void(GLFWwindow* window)> lambdaCallback = [=](GLFWwindow* window) {
                     fevalAsync({callback, factory.createScalar((int64_t)window)});
                 };
-                glfwSetWindowRefreshCallback(window, lambdaCallback);
+                pc = glfwSetWindowRefreshCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowFocus")
         {
+            GLFWwindowfocusfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowFocusCallback(window, nullptr);
+                pc = glfwSetWindowFocusCallback(window, nullptr);
                 windowFocusCallbackFunction.erase(window);
             }
             else
@@ -499,15 +552,17 @@ public:
                 function<void(GLFWwindow* window, int focused)> lambdaCallback = [=](GLFWwindow* window, int focused) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(focused)});
                 };
-                glfwSetWindowFocusCallback(window, lambdaCallback);
+                pc = glfwSetWindowFocusCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowIconify")
         {
+            GLFWwindowiconifyfun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowIconifyCallback(window, nullptr);
+                pc = glfwSetWindowIconifyCallback(window, nullptr);
                 windowIconifyCallbackFunction.erase(window);
             }
             else
@@ -516,15 +571,17 @@ public:
                 function<void(GLFWwindow* window, int iconified)> lambdaCallback = [=](GLFWwindow* window, int iconified) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(iconified)});
                 };
-                glfwSetWindowIconifyCallback(window, lambdaCallback);
+                pc = glfwSetWindowIconifyCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowMaximize")
         {
+            GLFWwindowmaximizefun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowMaximizeCallback(window, nullptr);
+                pc = glfwSetWindowMaximizeCallback(window, nullptr);
                 windowMaximizeCallbackFunction.erase(window);
             }
             else
@@ -533,15 +590,17 @@ public:
                 function<void(GLFWwindow* window, int maximized)> lambdaCallback = [=](GLFWwindow* window, int maximized) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(maximized)});
                 };
-                glfwSetWindowMaximizeCallback(window, lambdaCallback);
+                pc = glfwSetWindowMaximizeCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "framebufferSize")
         {
+            GLFWframebuffersizefun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetFramebufferSizeCallback(window, nullptr);
+                pc = glfwSetFramebufferSizeCallback(window, nullptr);
                 framebufferSizeCallbackFunction.erase(window);
             }
             else
@@ -550,15 +609,17 @@ public:
                 function<void(GLFWwindow* window, int width, int height)> lambdaCallback = [=](GLFWwindow* window, int width, int height) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(width), factory.createScalar(height)});
                 };
-                glfwSetFramebufferSizeCallback(window, lambdaCallback);
+                pc = glfwSetFramebufferSizeCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else if (type == "windowContentScale")
         {
+            GLFWwindowcontentscalefun pc;
             GLFWwindow* window = parseWindow(inputs[1]);
             if (inputs[2].isEmpty()) 
             {
-                glfwSetWindowContentScaleCallback(window, nullptr);
+                pc = glfwSetWindowContentScaleCallback(window, nullptr);
                 windowContentScaleCallbackFunction.erase(window);
             }
             else
@@ -567,14 +628,17 @@ public:
                 function<void(GLFWwindow* window, float xscale, float yscale)> lambdaCallback = [=](GLFWwindow* window, float xscale, float yscale) {
                     fevalAsync({callback, factory.createScalar((int64_t)window), factory.createScalar(xscale), factory.createScalar(yscale)});
                 };
-                glfwSetWindowContentScaleCallback(window, lambdaCallback);
+                pc = glfwSetWindowContentScaleCallback(window, lambdaCallback);
             }
+            previousCallback = (intptr_t)pc;
         }
         else
         {
             error("GLFW:registerCallback:unknownType",
             "Unknown callback type");           
         }
+
+        outputs[0] = factory.createScalar<int64_t>(previousCallback);
     }
 
     string parseType(Array& array)
