@@ -7,7 +7,7 @@ classdef tglfw < matlab.unittest.TestCase
     methods (TestClassSetup)
         function init(testCase)
             glfwInit();
-            previousCallback = glfwSetErrorCallback(@(c,d)fprintf("%d:%s\n",c,d));
+            previousCallback = glfwSetErrorCallback(@(c,d)disp(c+":"+d));
             testCase.addTeardown(@()glfwSetErrorCallback(previousCallback));
         end
     end

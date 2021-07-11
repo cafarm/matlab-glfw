@@ -82,6 +82,27 @@ ramp =
 >> glfwSetGammaRamp(monitor, ramp);
 ```
 
+C function pointers are automatically marshalled to and from MATLAB function handles.
+
+```matlab
+% MATLAB
+glfwSetErrorCallback(@errorCallback)
+
+function errorCallback(code, description)
+    disp(code + ":" + description);
+end
+```
+
+```c
+// C
+glfwSetErrorCallback(errorCallback);
+
+void errorCallback(int code, const char* description)
+{
+    displayErrorMessage(code, description);
+}
+```
+
 All numeric values are converted to `double` in MATLAB.
 
 ### Optional arguments
