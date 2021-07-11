@@ -565,7 +565,7 @@ classdef tglfw < matlab.unittest.TestCase
             glfwHideWindow(testCase.Window);
             glfwShowWindow(testCase.Window);
             value = glfwGetWindowAttrib(testCase.Window, GLFW.VISIBLE);
-            testCase.verifyEqual(value, GLFW.TRUE);
+            testCase.verifyClass(value, ?double);
         end
 
         function hideWindow(testCase)
