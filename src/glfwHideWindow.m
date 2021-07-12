@@ -1,6 +1,6 @@
 function glfwHideWindow(window)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
+    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
 end
-calllibglfw("glfwHideWindow", window);
+calllibglfw("glfwHideWindow", libpointer(window));
 end

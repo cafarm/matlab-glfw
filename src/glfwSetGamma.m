@@ -1,7 +1,7 @@
 function glfwSetGamma(monitor, gamma)
 arguments
-    monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr"), mustBeNonnull}
+    monitor (1,1) {mustBeA(monitor,"GLFWmonitor"), mustBeNonnull}
     gamma (1,1) single
 end
-calllibglfw("glfwSetGamma", monitor, gamma);
+calllibglfw("glfwSetGamma", libpointer(monitor), gamma);
 end

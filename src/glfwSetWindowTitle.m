@@ -1,7 +1,7 @@
 function glfwSetWindowTitle(window, title)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
+    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
     title (1,1) string
 end
-calllibglfw("glfwSetWindowTitle", window, char(title));
+calllibglfw("glfwSetWindowTitle", libpointer(window), char(title));
 end

@@ -294,7 +294,7 @@ classdef GLFW
         DONT_CARE                       = -1
     end
 
-    methods (Static)
+    methods (Static, Hidden)
         function id = errorID(value)
             switch value
                 case GLFW.NO_ERROR

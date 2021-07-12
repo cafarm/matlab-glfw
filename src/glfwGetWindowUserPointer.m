@@ -1,6 +1,6 @@
 function pointer = glfwGetWindowUserPointer(window)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
+    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
 end
-pointer = calllibglfw("glfwGetWindowUserPointer", window);
+pointer = calllibglfw("glfwGetWindowUserPointer", libpointer(window));
 end

@@ -1,13 +1,13 @@
 function previousCallback = glfwSetKeyCallback(window, callback)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
+    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
     callback function_handle {mustBeCallback(callback,5)} = function_handle.empty();
 end
 persistent callbackMap;
 if ~isa(callbackMap, "containers.Map")
     callbackMap = containers.Map("KeyType","int64","ValueType","any");
 end
-windowAddress = int64(calllibglfw("glfwGetPointerAddress", window));
+windowAddress = int64(calllibglfw("glfwGetPointerAddress", libpointer(window)));
 if isempty(callback)
     wrappedCallback = function_handle.empty();
 else

@@ -1,7 +1,7 @@
 function opacity = glfwGetWindowOpacity(window)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
+    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
 end
-opacity = calllibglfw("glfwGetWindowOpacity", window);
+opacity = calllibglfw("glfwGetWindowOpacity", libpointer(window));
 opacity = double(opacity);
 end
