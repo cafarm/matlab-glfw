@@ -1,6 +1,6 @@
 function glfwSetWindowAspectRatio(window, numer, denom)
 arguments
-    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
+    window (1,1) {mustBeClass(window,"GLFWwindow"), mustBeNonnull}
     numer (1,1) int32
     denom (1,1) int32
 end

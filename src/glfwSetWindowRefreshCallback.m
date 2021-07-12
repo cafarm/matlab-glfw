@@ -1,6 +1,6 @@
 function previousCallback = glfwSetWindowRefreshCallback(window, callback)
 arguments
-    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
+    window (1,1) {mustBeClass(window,"GLFWwindow"), mustBeNonnull}
     callback function_handle {mustBeCallback(callback,1)} = function_handle.empty();
 end
 persistent callbackMap;

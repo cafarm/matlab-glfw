@@ -1,6 +1,6 @@
 function mode = glfwGetVideoMode(monitor)
 arguments
-    monitor (1,1) {mustBeA(monitor,"GLFWmonitor"), mustBeNonnull}
+    monitor (1,1) {mustBeClass(monitor,"GLFWmonitor"), mustBeNonnull}
 end
 modePtr = calllibglfw("glfwGetVideoMode", libpointer(monitor));
 if isNull(modePtr)

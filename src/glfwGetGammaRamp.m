@@ -1,6 +1,6 @@
 function ramp = glfwGetGammaRamp(monitor)
 arguments
-    monitor (1,1) {mustBeA(monitor,"GLFWmonitor"), mustBeNonnull}
+    monitor (1,1) {mustBeClass(monitor,"GLFWmonitor"), mustBeNonnull}
 end
 rampPtr = calllibglfw("glfwGetGammaRamp", libpointer(monitor));
 if isNull(rampPtr)

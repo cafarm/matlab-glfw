@@ -3,8 +3,8 @@ arguments
     width (1,1) int32
     height (1,1) int32
     title (1,1) string
-    monitor (1,1) {mustBeA(monitor,"GLFWmonitor")} = GLFWmonitor()
-    share (1,1) {mustBeA(share,"GLFWwindow")} = GLFWwindow()
+    monitor (1,1) {mustBeClass(monitor,"GLFWmonitor")} = GLFWmonitor()
+    share (1,1) {mustBeClass(share,"GLFWwindow")} = GLFWwindow()
 end
 window = calllibglfw("glfwCreateWindow", width, height, char(title), libpointer(monitor), libpointer(share));
 if isNull(window)

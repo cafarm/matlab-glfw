@@ -41,7 +41,7 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function makeContextCurrentValidates(testCase)
-            testCase.verifyError(@()glfwMakeContextCurrent(1), "GLFW:validators:mustBeA");
+            testCase.verifyError(@()glfwMakeContextCurrent(1), "GLFW:validators:mustBeClass");
             testCase.verifyError(@()glfwMakeContextCurrent(GLFWwindow()), "GLFW:validators:mustBeNonnull");
         end
 

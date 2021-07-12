@@ -1,6 +1,6 @@
 function glfwSetWindowIcon(window, image)
 arguments
-    window (1,1) {mustBeA(window,"GLFWwindow")}
+    window (1,1) {mustBeClass(window,"GLFWwindow")}
     image (:,:,4) uint8
 end
 pimage = libpointer("GLFWimagePtr", struct( ...
