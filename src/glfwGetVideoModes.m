@@ -1,17 +1,17 @@
 function [modes, count] = glfwGetVideoModes(monitor)
 arguments
-    monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr"), mustBeNonnull}
+    monitor (1,1) {mustBeA(monitor,"GLFWmonitor"), mustBeNonnull}
 end
-[pmodes, ~, count] = calllibglfw("glfwGetVideoModes", monitor, libpointer("int32Ptr",0));
-if isNull(pmodes)
+[modesPtr, ~, count] = calllibglfw("glfwGetVideoModes", libpointer(monitor), libpointer("int32Ptr",0));
+if isNull(modesPtr)
     [code,desc] = glfwGetError();
     id = GLFW.errorID(code);
     error("GLFW:getVideoModes:" + id, "Unable to get video modes (%s). %s", id, strjoin(desc, "."));
 end
-modes = pmodes.Value;
+modes = modesPtr.Value;
 for i = 2:count
-    pmodes = pmodes + 1;
-    modes(i) = pmodes.Value;
+    modesPtr = modesPtr + 1;
+    modes(i) = modesPtr.Value;
 end
 count = double(count);
 end

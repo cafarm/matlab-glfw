@@ -1,6 +1,7 @@
 function glfwDestroyCursor(cursor)
 arguments
-    cursor (1,1) {mustBeLibPointer(cursor,"GLFWcursorPtr")}
+    cursor (1,1) {mustBeA(cursor,"GLFWcursor")}
 end
-calllibglfw("glfwDestroyCursor", cursor);
+calllibglfw("glfwDestroyCursor", libpointer(cursor));
+delete(cursor);
 end

@@ -1,8 +1,8 @@
 function glfwSetWindowSize(window, width, height)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
+    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
     width (1,1) int32
     height (1,1) int32
 end
-calllibglfw("glfwSetWindowSize", window, width, height);
+calllibglfw("glfwSetWindowSize", libpointer(window), width, height);
 end

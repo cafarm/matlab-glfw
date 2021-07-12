@@ -8,4 +8,5 @@ if isNull(cursor)
     id = GLFW.errorID(code);
     error("GLFW:createStandardCursor:" + id, "Unable to create cursor (%s). %s", id, strjoin(desc, "."));
 end
+cursor = GLFWcursor(cursor);
 end

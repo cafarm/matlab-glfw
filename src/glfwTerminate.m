@@ -8,4 +8,12 @@ n = string({listing.name});
 n = replace(n, ".m", "");
 n(n=="glfwSetErrorCallback") = [];
 clear(n{:});
+
+% Delete library handles
+delete(GLFWmonitor.instances());
+delete(GLFWwindow.instances());
+delete(GLFWcursor.instances());
+clear("GLFWmonitor");
+clear("GLFWwindow");
+clear("GLFWcursor");
 end

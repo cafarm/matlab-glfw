@@ -1,7 +1,7 @@
 function glfwSetWindowOpacity(window, opacity)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr"), mustBeNonnull}
+    window (1,1) {mustBeA(window,"GLFWwindow"), mustBeNonnull}
     opacity (1,1) single
 end
-calllibglfw("glfwSetWindowOpacity", window, opacity);
+calllibglfw("glfwSetWindowOpacity", libpointer(window), opacity);
 end

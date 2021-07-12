@@ -1,6 +1,7 @@
 function glfwDestroyWindow(window)
 arguments
-    window (1,1) {mustBeLibPointer(window,"GLFWwindowPtr")}
+    window (1,1) {mustBeA(window,"GLFWwindow")}
 end
-calllibglfw("glfwDestroyWindow", window);
+calllibglfw("glfwDestroyWindow", libpointer(window));
+delete(window);
 end

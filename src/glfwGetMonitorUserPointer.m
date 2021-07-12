@@ -1,6 +1,6 @@
 function pointer = glfwGetMonitorUserPointer(monitor)
 arguments
-    monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr"), mustBeNonnull}
+    monitor (1,1) {mustBeA(monitor,"GLFWmonitor"), mustBeNonnull}
 end
-pointer = calllibglfw("glfwGetMonitorUserPointer", monitor);
+pointer = calllibglfw("glfwGetMonitorUserPointer", libpointer(monitor));
 end

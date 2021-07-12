@@ -1,7 +1,7 @@
 function name = glfwGetMonitorName(monitor)
 arguments
-    monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr"), mustBeNonnull}
+    monitor (1,1) {mustBeA(monitor,"GLFWmonitor"), mustBeNonnull}
 end
-name = calllibglfw("glfwGetMonitorName", monitor);
+name = calllibglfw("glfwGetMonitorName", libpointer(monitor));
 name = string(name);
 end

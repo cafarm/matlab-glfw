@@ -1,14 +1,14 @@
 function glfwSetGammaRamp(monitor, ramp)
 arguments
-    monitor (1,1) {mustBeLibPointer(monitor,"GLFWmonitorPtr"), mustBeNonnull}
+    monitor (1,1) {mustBeA(monitor,"GLFWmonitor"), mustBeNonnull}
     ramp (1,1) {mustBeValidRamp}
 end
-pramp = libpointer("GLFWgammarampPtr", struct( ...
+rampPtr = libpointer("GLFWgammarampPtr", struct( ...
     "red", libpointer("uint16Ptr", ramp.red), ...
     "green", libpointer("uint16Ptr", ramp.green), ...
     "blue", libpointer("uint16Ptr", ramp.blue), ...
     "size", numel(ramp.red)));
-calllibglfw("glfwSetGammaRamp", monitor, pramp);
+calllibglfw("glfwSetGammaRamp", libpointer(monitor), rampPtr);
 end
 
 function mustBeValidRamp(r)
