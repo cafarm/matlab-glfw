@@ -67,7 +67,7 @@ suite = testsuite("tests", "IncludeSubfolders", true);
 
 [~,~] = mkdir("results/matlab");
 
-runner = TestRunner.withTextOutput("OutputDetail", Verbosity.Detailed);
+runner = TestRunner.withTextOutput("LoggingLevel", Verbosity.Detailed, "OutputDetail", Verbosity.Detailed);
 runner.addPlugin(XMLPlugin.producingJUnitFormat("results/matlab/results.xml"));
 runner.addPlugin(CodeCoveragePlugin.forFolder("src", "IncludingSubfolders", true, "Producing", CoberturaFormat("coverage.xml")));
 

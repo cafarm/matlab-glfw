@@ -73,7 +73,7 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getVersion(testCase)
             [major,minor,rev] = glfwGetVersion();
-            testCase.log(1, sprintf("Running against GLFW %d.%d.%d", major, minor, rev));
+            testCase.log(sprintf("Running against GLFW %d.%d.%d", major, minor, rev));
             testCase.verifyClass(major, ?double);
             testCase.verifyClass(minor, ?double);
             testCase.verifyClass(rev, ?double);
@@ -81,7 +81,7 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getVersionString(testCase)
             version = glfwGetVersionString();
-            testCase.log(1, sprintf("Running against GLFW %s", version));
+            testCase.log(sprintf("Running against GLFW %s", version));
             testCase.verifyClass(version, ?string);
         end
 
