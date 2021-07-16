@@ -1,12 +1,12 @@
 classdef (Sealed) GLFWmonitor < handle
     properties (Access = private)
-        Pointer (1,1) {mustBeLibPointer(Pointer,"GLFWmonitorPtr")} = libpointer("GLFWmonitorPtr")
+        Pointer (1,1) {mustBeLibPointer(Pointer,"GLFWmonitorPtr")} = libglfwpointer("GLFWmonitorPtr")
     end
     
     methods
         function monitor = GLFWmonitor(pointer)
             arguments
-                pointer (1,1) {mustBeLibPointer(pointer,"GLFWmonitorPtr")} = libpointer("GLFWmonitorPtr")
+                pointer (1,1) {mustBeLibPointer(pointer,"GLFWmonitorPtr")} = libglfwpointer("GLFWmonitorPtr")
             end
             monitor.Pointer = pointer;
             GLFWmonitor.instances(monitor);

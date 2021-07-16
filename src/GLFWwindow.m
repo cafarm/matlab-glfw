@@ -1,12 +1,12 @@
 classdef (Sealed) GLFWwindow < handle
     properties (Access = private)
-        Pointer (1,1) {mustBeLibPointer(Pointer,"GLFWwindowPtr")} = libpointer("GLFWwindowPtr")
+        Pointer (1,1) {mustBeLibPointer(Pointer,"GLFWwindowPtr")} = libglfwpointer("GLFWwindowPtr")
     end
     
     methods
         function window = GLFWwindow(pointer)
             arguments
-                pointer (1,1) {mustBeLibPointer(pointer,"GLFWwindowPtr")} = libpointer("GLFWwindowPtr")
+                pointer (1,1) {mustBeLibPointer(pointer,"GLFWwindowPtr")} = libglfwpointer("GLFWwindowPtr")
             end
             window.Pointer = pointer;
             GLFWwindow.instances(window);

@@ -1,12 +1,12 @@
 classdef (Sealed) GLFWcursor < handle
     properties (Access = private)
-        Pointer (1,1) {mustBeLibPointer(Pointer,"GLFWcursorPtr")} = libpointer("GLFWcursorPtr")
+        Pointer (1,1) {mustBeLibPointer(Pointer,"GLFWcursorPtr")} = libglfwpointer("GLFWcursorPtr")
     end
     
     methods
         function cursor = GLFWcursor(pointer)
             arguments
-                pointer (1,1) {mustBeLibPointer(pointer,"GLFWcursorPtr")} = libpointer("GLFWcursorPtr")
+                pointer (1,1) {mustBeLibPointer(pointer,"GLFWcursorPtr")} = libglfwpointer("GLFWcursorPtr")
             end
             cursor.Pointer = pointer;
             GLFWcursor.instances(cursor);
