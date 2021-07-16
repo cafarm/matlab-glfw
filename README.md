@@ -33,7 +33,7 @@ glfwTerminate();
 ```
 
 ## Documentation
-The standard [GLFW documentation](https://www.glfw.org/docs/latest/) is applicable to learn GLFW in MATLAB. Differences between the MATLAB and C API are noted below.
+The standard [GLFW documentation](https://www.glfw.org/docs/latest/) is applicable to learn GLFW in MATLAB. Differences between the C and MATLAB API are noted below.
 
 ### Constants
 C constants are available in MATLAB under the `GLFW` class and have the same name minus the `GLFW_` prefix.
@@ -63,7 +63,7 @@ if (!glfwInit()) // must manually handle error condition
 ```
 
 ### Marshalling
-Non-opaque C structs are automatically marshalled to and from MATLAB structs.
+C structs are automatically marshalled to and from MATLAB structs.
 
 ```
 >> monitor = glfwGetPrimaryMonitor();
@@ -103,7 +103,7 @@ void errorCallback(int code, const char* description)
 }
 ```
 
-All numeric values are converted to `double` in MATLAB.
+All C numeric types are automatically marshalled to and from MATLAB `double`.
 
 ### Optional arguments
 C functions input arguments that may be set to `NULL` are moved to the end of the argument list in MATLAB and treated as optional arguments.
