@@ -48,8 +48,24 @@ glfwInitHint(GLFW.JOYSTICK_HAT_BUTTONS, GLFW.FALSE);
 glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
 ```
 
+### Inputs and outputs
+C functions that take pointers as input arguments to store return values, instead return those values as output arguments in MATLAB.
+
+```matlab
+% MATLAB
+[major,minor,revision] = glfwGetVersion();
+fprintf("Running against GLFW %i.%i.%i\n", major, minor, revision);
+```
+
+```c
+// C
+int major, minor, revision;
+glfwGetVersion(&major, &minor, &revision);
+printf("Running against GLFW %i.%i.%i\n", major, minor, revision);
+```
+
 ### Error handling
-C functions that return `NULL` pointers or `GLFW_FALSE` *solely* to indicate an error instead throw an exception in MATLAB.
+C functions that return `NULL` pointers or `GLFW_FALSE` *solely* to indicate an error, instead throw an exception in MATLAB.
 
 ```matlab
 % MATLAB
@@ -108,27 +124,6 @@ void errorCallback(int code, const char* description)
 ```
 
 All C numeric types are automatically marshalled to and from MATLAB `double`.
-
-### Optional arguments
-C functions input arguments that may be set to `NULL` are moved to the end of the argument list in MATLAB and treated as optional arguments.
-
-```matlab
-% MATLAB
-% Specify monitor
-glfwSetWindowMonitor(window, xpos, ypos, width, height, monitor);
-
-% Do not specify monitor
-glfwSetWindowMonitor(window, xpos, ypos, width, height);
-```
-
-```c
-// C
-// Specify monitor 
-glfwSetWindowMonitor(window, monitor, xpos, ypos, width, height);
-
-// Do not specify monitor
-glfwSetWindowMonitor(window, NULL, xpos, ypos, width, height);
-```
 
 ## Development
 ### Test
