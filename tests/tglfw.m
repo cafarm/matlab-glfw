@@ -30,7 +30,6 @@ classdef tglfw < matlab.unittest.TestCase
     
     methods (TestMethodTeardown)
         function destroyWindow(testCase)
-            glfwPollEvents();
             glfwDestroyWindow(testCase.Window);
         end
     end
