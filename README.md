@@ -1,5 +1,5 @@
-# matlab-glfw [![cafarm](https://circleci.com/gh/cafarm/matlab-glfw.svg?style=svg)](https://app.circleci.com/pipelines/github/cafarm/matlab-glfw) [![codecov](https://codecov.io/gh/cafarm/matlab-glfw/branch/main/graph/badge.svg?token=IXB5XNSA10)](https://codecov.io/gh/cafarm/matlab-glfw)
-GLFW bindings for MATLAB. From [glfw.org](https://www.glfw.org):
+# GLFW bindings for MATLAB [![cafarm](https://circleci.com/gh/cafarm/matlab-glfw.svg?style=svg)](https://app.circleci.com/pipelines/github/cafarm/matlab-glfw) [![codecov](https://codecov.io/gh/cafarm/matlab-glfw/branch/main/graph/badge.svg?token=IXB5XNSA10)](https://codecov.io/gh/cafarm/matlab-glfw)
+From [glfw.org](https://www.glfw.org):
 
 > GLFW is an Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan development on the desktop. It provides a simple API for creating windows, contexts and surfaces, receiving input and events.
 
