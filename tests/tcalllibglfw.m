@@ -16,7 +16,7 @@ function n = allFuncNames()
 listing = dir(fullfile(srcFolder, "glfw*"));
 n = string({listing.name});
 n = replace(n, ".m", "");
-n(ismember(n,["GLFW","GLFWmonitor","GLFWwindow","GLFWcursor"])) = [];
+n(startsWith(n,"GLFW")) = [];
 n(endsWith(n,"Callback")) = [];
 n = cellstr(n);
 end

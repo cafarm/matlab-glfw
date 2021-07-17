@@ -311,7 +311,7 @@ classdef tglfw < matlab.unittest.TestCase
         function getGamepadState(testCase)
             [conn, state] = glfwGetGamepadState(GLFW.JOYSTICK_1);
             testCase.verifyClass(conn, ?double);
-            testCase.verifyClass(state, ?struct);
+            testCase.verifyClass(state, ?GLFWgamepadstate);
         end
 
         function clipboardString(testCase)
@@ -392,13 +392,13 @@ classdef tglfw < matlab.unittest.TestCase
 
         function getVideoModes(testCase)
             [modes,count] = glfwGetVideoModes(testCase.Monitor);
-            testCase.verifyClass(modes, ?struct);
+            testCase.verifyClass(modes, ?GLFWvidmode);
             testCase.verifyClass(count, ?double);
         end
 
         function getVideoMode(testCase)
             mode = glfwGetVideoMode(testCase.Monitor);
-            testCase.verifyClass(mode, ?struct);
+            testCase.verifyClass(mode, ?GLFWvidmode);
         end
 
         function setGamma(testCase)
@@ -424,11 +424,9 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function setGammaRampInvalid(testCase)
-            m = testCase.Monitor;
-            testCase.verifyError(@()glfwSetGammaRamp(m,1), "GLFW:validators:mustBeValidRamp");
-            testCase.verifyError(@()glfwSetGammaRamp(m,struct), "GLFW:validators:mustBeValidRamp");
-            testCase.verifyError(@()glfwSetGammaRamp(m,struct("red",[],"green",[],"blue",[])), "GLFW:validators:mustBeValidRamp");
-            testCase.verifyError(@()glfwSetGammaRamp(m,struct("red",1,"green",1,"blue",1,"size",3)), "GLFW:validators:mustBeValidRamp");
+            ramp = GLFWgammaramp();
+            ramp.size = 10;
+            testCase.verifyError(@()glfwSetGammaRamp(testCase.Monitor,ramp), "GLFW:validators:mustBeValidRamp");
         end
 
         %% Vulkan support

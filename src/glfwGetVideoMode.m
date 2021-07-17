@@ -8,5 +8,5 @@ if isNull(modePtr)
     id = GLFW.errorID(code);
     error("GLFW:getVideoMode:" + id, "Unable to get video mode (%s). %s", id, strjoin(desc, "."));
 end
-mode = modePtr.Value;
+mode = GLFWvidmode.fromLibPointer(modePtr);
 end

@@ -63,7 +63,7 @@ if (!glfwInit()) // must manually handle error condition
 ```
 
 ### Marshalling
-C structs are automatically marshalled to and from MATLAB structs.
+C structs are automatically marshalled to and from MATLAB classes of the same name.
 
 ```
 >> monitor = glfwGetPrimaryMonitor();
@@ -71,14 +71,18 @@ C structs are automatically marshalled to and from MATLAB structs.
 
 ramp = 
 
-  struct with fields:
+  GLFWgammaramp with properties:
 
-      red: [0 64 128 192 256 320 384 448 512 576 640 704 768 832 896 960 1024 1089 … ]
-    green: [0 64 128 192 256 320 384 448 512 576 640 704 768 832 896 960 1024 1089 … ]
-     blue: [0 64 128 192 256 320 384 448 512 576 640 704 768 832 896 960 1024 1089 … ]
+      red: [0 64 128 192 256 320 384 448 … ]
+    green: [0 64 128 192 256 320 384 448 … ]
+     blue: [0 64 128 192 256 320 384 448 … ]
      size: 1024
 
->> ramp.red = flip(ramp.red);
+>> ramp = GLFWgammaramp();
+>> ramp.red = linspace(0,65535,1024);
+>> ramp.green = linspace(0,65535,1024);
+>> ramp.blue = linspace(0,65535,1024);
+>> ramp.size = 1024;
 >> glfwSetGammaRamp(monitor, ramp);
 ```
 

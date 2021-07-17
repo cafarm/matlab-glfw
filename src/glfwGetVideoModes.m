@@ -8,10 +8,10 @@ if isNull(modesPtr)
     id = GLFW.errorID(code);
     error("GLFW:getVideoModes:" + id, "Unable to get video modes (%s). %s", id, strjoin(desc, "."));
 end
-modes = modesPtr.Value;
-for i = 2:count
+modes = GLFWvidmode.empty(0,count);
+for i = 1:count
+    modes(i) = GLFWvidmode.fromLibPointer(modesPtr);
     modesPtr = modesPtr + 1;
-    modes(i) = modesPtr.Value;
 end
 count = double(count);
 end

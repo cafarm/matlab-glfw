@@ -8,11 +8,5 @@ if isNull(rampPtr)
     id = GLFW.errorID(code);
     error("GLFW:getGammaRamp:" + id, "Unable to get gamma ramp (%s). %s", id, strjoin(desc, "."));
 end
-ramp = rampPtr.Value;
-setdatatype(ramp.red, ramp.red.DataType, ramp.size);
-setdatatype(ramp.green, ramp.green.DataType, ramp.size);
-setdatatype(ramp.blue, ramp.blue.DataType, ramp.size);
-ramp.red = double(ramp.red.Value');
-ramp.green = double(ramp.green.Value');
-ramp.blue = double(ramp.blue.Value');
+ramp = GLFWgammaramp.fromLibPointer(rampPtr);
 end
