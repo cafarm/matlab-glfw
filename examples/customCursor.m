@@ -1,11 +1,9 @@
-%% Create window
 % Initialize the library
 glfwInit();
 
 % Create a windowed mode window and its OpenGL context
 window = glfwCreateWindow(640, 480, "Cursors Example");
 
-%% Custom cursor
 % Read RGB image (8-bit color depth)
 peppers = imread("peppers.png");
 
@@ -22,12 +20,15 @@ cursor = glfwCreateCursor(image, 0, 0);
 % Set cursor image when the cursor is over specified window
 glfwSetCursor(window, cursor);
 
-%% Standard cursor
-% Create cursor with a standard shape
-cursor = glfwCreateStandardCursor(GLFW.CROSSHAIR_CURSOR);
+% Loop until the user closes the window
+while ~glfwWindowShouldClose(window)
+    % Render here...
+    
+    % Swap front and back buffers
+    glfwSwapBuffers(window);
+    
+    % Poll for and process events
+    glfwPollEvents();
+end
 
-% Set cursor image when the cursor is over specified window
-glfwSetCursor(window, cursor);
-
-%% Clean up
 glfwTerminate();
