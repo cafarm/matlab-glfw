@@ -7,6 +7,14 @@ classdef (Sealed) GLFWgammaramp
     end
 
     methods (Hidden)
+        function validate(ramp)
+            if ramp.size > min([numel(ramp.red),numel(ramp.green),numel(ramp.blue)])
+                error("GLFW:gammaramp:invalidRamp", ...
+                    "Ramp 'size' must be less than or equal to the min number " + ...
+                    "of elements in 'red', 'blue', or 'green'.");
+            end
+        end
+
         function pointer = lib.pointer(ramp)
             pointer = libglfwpointer("GLFWgammarampPtr", struct( ...
                 "red", libpointer("uint16Ptr", ramp.red), ...

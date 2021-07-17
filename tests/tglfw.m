@@ -140,7 +140,11 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function createCursor(testCase)
-            cursor = glfwCreateCursor(0xff*ones(16,16,4,"uint8"), 0, 0);
+            image = GLFWimage();
+            image.width = 16;
+            image.height = 16;
+            image.pixels = 0xff*ones(16,16,4,"uint8");
+            cursor = glfwCreateCursor(image, 0, 0);
             testCase.verifyClass(cursor, ?GLFWcursor);
             testCase.verifyFalse(isNull(cursor));
             glfwDestroyCursor(cursor);
@@ -150,7 +154,11 @@ classdef tglfw < matlab.unittest.TestCase
             glfwTerminate();
             testCase.Window = GLFWwindow();
             init = onCleanup(@glfwInit);
-            testCase.verifyError(@()glfwCreateCursor(0xff*ones(16,16,4,"uint8"), 0, 0), "GLFW:createCursor:GLFW_NOT_INITIALIZED");
+            image = GLFWimage();
+            image.width = 16;
+            image.height = 16;
+            image.pixels = 0xff*ones(16,16,4,"uint8");
+            testCase.verifyError(@()glfwCreateCursor(image, 0, 0), "GLFW:createCursor:GLFW_NOT_INITIALIZED");
         end
 
         function createStandardCursor(testCase)
@@ -426,7 +434,7 @@ classdef tglfw < matlab.unittest.TestCase
         function setGammaRampInvalid(testCase)
             ramp = GLFWgammaramp();
             ramp.size = 10;
-            testCase.verifyError(@()glfwSetGammaRamp(testCase.Monitor,ramp), "GLFW:validators:mustBeValidRamp");
+            testCase.verifyError(@()glfwSetGammaRamp(testCase.Monitor,ramp), "GLFW:gammaramp:invalidRamp");
         end
 
         %% Vulkan support
@@ -472,7 +480,18 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function setWindowIcon(testCase)
-            glfwSetWindowIcon(testCase.Window, 0xff*ones(16,16,4,"uint8"));
+            image = GLFWimage();
+            image.width = 16;
+            image.height = 16;
+            image.pixels = 0xff*ones(16,16,4,"uint8");
+            glfwSetWindowIcon(testCase.Window, image);
+        end
+
+        function setWindowIconThrows(testCase)
+            image = GLFWimage();
+            image.width = 16;
+            image.height = 16;
+            testCase.verifyError(@()glfwSetWindowIcon(testCase.Window, image), "GLFW:image:invalidImage");
         end
 
         function getWindowPos(testCase)
