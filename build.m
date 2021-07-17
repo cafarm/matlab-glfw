@@ -65,11 +65,12 @@ import matlab.unittest.plugins.codecoverage.CoberturaFormat;
 getdeps();
 suite = testsuite("tests", "IncludeSubfolders", true);
 
-[~,~] = mkdir("results/matlab");
+resultsDir = "results/matlab";
+[~,~] = mkdir(resultsDir);
 
 runner = TestRunner.withTextOutput("LoggingLevel", Verbosity.Detailed, "OutputDetail", Verbosity.Detailed);
-runner.addPlugin(XMLPlugin.producingJUnitFormat("results/matlab/results.xml"));
-runner.addPlugin(CodeCoveragePlugin.forFolder("src", "IncludingSubfolders", true, "Producing", CoberturaFormat("coverage.xml")));
+runner.addPlugin(XMLPlugin.producingJUnitFormat(fullfile(resultsDir,"results.xml")));
+runner.addPlugin(CodeCoveragePlugin.forFolder("src", "IncludingSubfolders", true, "Producing", CoberturaFormat(fullfile(resultsDir,"coverage.xml"))));
 
 results = runner.run(suite);
 assertSuccess(results);
