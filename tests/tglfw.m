@@ -567,7 +567,7 @@ classdef tglfw < matlab.unittest.TestCase
         end
 
         function setWindowMonitor(testCase)
-            glfwSetWindowMonitor(testCase.Window, 0, 0, 640, 480, 60);
+            glfwSetWindowMonitor(testCase.Window, GLFWmonitor(), 0, 0, 640, 480, 60);
         end
 
         function windowAttrib(testCase)
