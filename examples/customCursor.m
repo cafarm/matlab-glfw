@@ -2,7 +2,7 @@
 glfwInit();
 
 % Create a windowed mode window and its OpenGL context
-window = glfwCreateWindow(640, 480, "Cursors Example");
+window = glfwCreateWindow(640, 480, "Custom Cursor Example");
 
 % Read RGB image (8-bit color depth)
 peppers = imread("peppers.png");
