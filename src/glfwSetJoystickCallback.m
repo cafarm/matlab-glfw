@@ -11,6 +11,9 @@ if isempty(callback)
 else
     wrappedCallback = @(jid,event)tryCallback(callback,jid,event);
 end
+if ~libisloaded("libglfw")
+    loadlibglfw();
+end
 previousCallbackAddress = glfwRegisterCallback("joystick", wrappedCallback);
 if previousCallbackAddress == 0
     previousCallback = function_handle.empty();

@@ -13,6 +13,9 @@ if isempty(callback)
 else
     wrappedCallback = @(windowAddress,iconified)tryCallback(callback,window,iconified);
 end
+if ~libisloaded("libglfw")
+    loadlibglfw();
+end
 previousCallbackAddress = glfwRegisterCallback("windowIconify", windowAddress, wrappedCallback);
 if previousCallbackAddress == 0 || ~callbackMap.isKey(windowAddress)
     previousCallback = function_handle.empty();

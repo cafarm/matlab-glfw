@@ -13,6 +13,9 @@ if isempty(callback)
 else
     wrappedCallback = @(windowAddress,button,action,mods)tryCallback(callback,window,button,action,mods);
 end
+if ~libisloaded("libglfw")
+    loadlibglfw();
+end
 previousCallbackAddress = glfwRegisterCallback("mouseButton", windowAddress, wrappedCallback);
 if previousCallbackAddress == 0 || ~callbackMap.isKey(windowAddress)
     previousCallback = function_handle.empty();

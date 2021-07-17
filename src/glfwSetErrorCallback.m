@@ -11,6 +11,9 @@ if isempty(callback)
 else
     wrappedCallback = @(code,description)tryCallback(callback,code,description);
 end
+if ~libisloaded("libglfw")
+    loadlibglfw();
+end
 previousCallbackAddress = glfwRegisterCallback("error", wrappedCallback);
 if previousCallbackAddress == 0
     previousCallback = function_handle.empty();
