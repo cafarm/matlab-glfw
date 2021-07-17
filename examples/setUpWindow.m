@@ -1,5 +1,3 @@
-% Ported from https://www.glfw.org/documentation.html
-
 % Initialize the library
 glfwInit();
 
