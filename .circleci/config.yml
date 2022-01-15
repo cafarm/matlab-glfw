@@ -4,13 +4,11 @@ orbs:
   codecov: codecov/codecov@3
   win: circleci/windows@2
 executors:
-  linux:
+  linux: &linux-executor
     machine:
       image: ubuntu-2004:202111-02
   windows:
-    executor:
-      name: win/default
-      shell: bash
+    win/default
 jobs:
   test:
     parameters:
@@ -32,13 +30,18 @@ jobs:
               export PATH="/c/Program Files/CMake/bin:$PATH"
             fi
             ./getdeps.sh
+          shell: bash
       - matlab/install:
           release: << parameters.matlab-release >>
       - matlab/run-command:
           command: build ci
       - store_test_results:
           path: results
-      - codecov/upload
+      - when:
+          condition:
+            equal: [*linux-executor, <<parameters.executor>>]
+          steps:
+            - codecov/upload
 workflows:
   test-matrix:
     jobs:
