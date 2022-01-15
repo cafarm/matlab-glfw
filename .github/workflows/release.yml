@@ -37,16 +37,17 @@ jobs:
             sudo apt-get update && sudo apt-get install xorg-dev
           fi
 
-      - uses: matlab-actions/setup-matlab@v1
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
         with:
           release: R2021a
 
-      - name: Compile MEX files
+      - name: Compile GLFW and MEX binaries
         uses: matlab-actions/run-command@v1
         with:
           command: build("compile")
 
-      - name: Store binaries
+      - name: Store GLFW and MEX binaries
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.computer }}
@@ -62,9 +63,17 @@ jobs:
       - name: Checkout matlab-glfw
         uses: actions/checkout@v2
       
-      - uses: actions/download-artifact@v2
+      - name: Download GLFW and MEX binaries
+        uses: actions/download-artifact@v2
+
+      - name: Move GLFW and MEX binaries into place
+        run: |
+          rsync -av glnxa64/ . && rm -rf glnxa64
+          rsync -av maci64/ . && rm -rf maci64
+          rsync -av win64/ . && rm -rf win64
       
-      - uses: matlab-actions/setup-matlab@v1
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v1
 
       - name: Package toolbox
         uses: matlab-actions/run-command@v1
