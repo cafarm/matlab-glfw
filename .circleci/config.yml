@@ -22,7 +22,8 @@ jobs:
       - run:
           name: Compile GLFW
           command: |
-            if [[ $(uname) == Linux ]]; then
+            os=$(uname)
+            if [[ $os == Linux ]]; then
               sudo apt-get update && sudo apt-get install xorg-dev
             elif [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
               choco install cmake
