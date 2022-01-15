@@ -7,9 +7,6 @@ executors:
   linux: &linux-executor
     machine:
       image: ubuntu-2004:202111-02
-  macos:
-    macos:
-      xcode: 13.2.1
   windows:
     win/default
 jobs:
@@ -27,6 +24,8 @@ jobs:
           command: |
             if [[ $(uname) == Linux ]]; then
               sudo apt-get update && sudo apt-get install xorg-dev
+            elif [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+              choco install cmake
             fi
             ./getdeps.sh
           shell: bash
@@ -43,7 +42,7 @@ workflows:
       - test:
           matrix:
             parameters:
-              executor: [linux, macos]
+              executor: [linux]
               matlab-release: ["R2020a", "latest"]
       - test:
           matrix:
