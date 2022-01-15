@@ -63,25 +63,6 @@ jobs:
         uses: actions/checkout@v2
       
       - uses: actions/download-artifact@v2
-        with:
-          name: glnxa64
-          path: |
-            deps/glfw/glnxa64
-            src/private/*.mexa64
-      
-      - uses: actions/download-artifact@v2
-        with:
-          name: maci64
-          path: |
-            deps/glfw/maci64
-            src/private/*.mexmaci64
-          
-      - uses: actions/download-artifact@v2
-        with:
-          name: win64
-          path: |
-            deps/glfw/win64
-            src/private/*.mexw64
       
       - uses: matlab-actions/setup-matlab@v1
 
