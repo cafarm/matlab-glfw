@@ -24,7 +24,7 @@ function package(prod)
 arguments
     prod (1,1) logical = false 
 end
-getdeps();
+compile();
 if prod
     v = fileread("VERSION");
 else
@@ -39,7 +39,7 @@ function test(cov)
 arguments
     cov (1,1) logical = false
 end
-getdeps();
+compile();
 args = {"tests", "IncludeSubfolders", true};
 if cov
     if libisloaded("libglfw")
@@ -62,7 +62,7 @@ import matlab.unittest.plugins.CodeCoveragePlugin;
 import matlab.unittest.plugins.XMLPlugin;
 import matlab.unittest.plugins.codecoverage.CoberturaFormat;
 
-getdeps();
+compile();
 suite = testsuite("tests", "IncludeSubfolders", true);
 
 resultsDir = "results/matlab";
@@ -129,4 +129,16 @@ if isfolder("deps") && ~force
     return;
 end
 system("bash getdeps.sh");
+end
+
+function compile(force)
+arguments
+    force (1,1) logical = false
+end
+getdeps();
+if isfile("src/private/glfwRegisterCallback."+mexext) && ~force
+    return;
+end
+glfwDir = "deps/glfw/"+computer;
+mex("-I"+glfwDir+"/include", "-L"+glfwDir+"/lib", "-lglfw", "-outdir", "src/private", "src/private/glfwRegisterCallback.cpp");
 end
