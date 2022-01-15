@@ -10,7 +10,7 @@ defaults:
     shell: bash
   
 jobs:
-  build-glfw:
+  compile:
     runs-on: ${{ matrix.os }}
     
     strategy:
@@ -36,16 +36,27 @@ jobs:
             sudo apt-get update && sudo apt-get install xorg-dev
           fi
           ./getdeps.sh
-      
-      - name: Store GLFW binaries
+
+      - uses: matlab-actions/setup-matlab@v1
+        with:
+          release: R2021a
+
+      - name: Compile MEX files
+        uses: matlab-actions/run-command@v1
+        with:
+          command: build("compile")
+
+      - name: Store binaries
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.computer }}
-          path: deps/glfw/${{ matrix.computer }}
+          path: |
+            deps/glfw/${{ matrix.computer }}
+            src/private/*.mex*
   
-  release-matlab-glfw:
+  release:
     runs-on: ubuntu-latest
-    needs: [build-glfw]
+    needs: [compile]
     
     steps:
       - name: Checkout matlab-glfw
@@ -54,17 +65,23 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: glnxa64
-          path: deps/glfw/glnxa64
+          path: |
+            deps/glfw/glnxa64
+            src/private/*.mexa64
       
       - uses: actions/download-artifact@v2
         with:
           name: maci64
-          path: deps/glfw/maci64
+          path: |
+            deps/glfw/maci64
+            src/private/*.mexmaci64
           
       - uses: actions/download-artifact@v2
         with:
           name: win64
-          path: deps/glfw/win64
+          path: |
+            deps/glfw/win64
+            src/private/*.mexw64
       
       - uses: matlab-actions/setup-matlab@v1
 
