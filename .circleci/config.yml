@@ -27,6 +27,7 @@ jobs:
               sudo apt-get update && sudo apt-get install xorg-dev
             elif [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
               choco install cmake
+              export PATH="/c/Program Files/CMake/bin:$PATH"
             fi
             ./getdeps.sh
           shell: bash
@@ -36,7 +37,8 @@ jobs:
           command: build ci
       - store_test_results:
           path: results
-      - codecov/upload
+      - codecov/upload:
+          shell: bash
 workflows:
   test-matrix:
     jobs:
