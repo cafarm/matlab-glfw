@@ -31,12 +31,11 @@ jobs:
       - name: Checkout matlab-glfw
         uses: actions/checkout@v2
     
-      - name: Compile GLFW
+      - name: Install system dependencies
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
             sudo apt-get update && sudo apt-get install xorg-dev
           fi
-          ./getdeps.sh
 
       - uses: matlab-actions/setup-matlab@v1
         with:
