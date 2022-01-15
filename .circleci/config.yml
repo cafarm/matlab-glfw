@@ -3,9 +3,12 @@ orbs:
   matlab: mathworks/matlab@0
   codecov: codecov/codecov@3
 executors:
-  linux:
+  linux-2004:
     machine:
       image: ubuntu-2004:202111-02
+  linux-1604:
+    machine:
+      image: ubuntu-1604:202104-01
 jobs:
   test:
     parameters:
@@ -38,5 +41,10 @@ workflows:
       - test:
           matrix:
             parameters:
-              executor: [linux]
-              matlab-release: ["R2020a", "latest"]
+              executor: linux-2004
+              matlab-release: latest
+      - test:
+          matrix:
+            parameters:
+              executor: linux-1604
+              matlab-release: R2020a
