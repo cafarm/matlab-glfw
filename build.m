@@ -139,6 +139,11 @@ getdeps();
 if isfile("src/private/glfwRegisterCallback."+mexext) && ~force
     return;
 end
-glfwDir = "deps/glfw/"+lower(computer);
-mex("-I"+glfwDir+"/include", "-L"+glfwDir+"/lib", "-lglfw", "-outdir", "src/private", "src/private/glfwRegisterCallback.cpp");
+glfwDir = "deps/glfw/"+lower(computer("arch"));
+if ispc
+    libname = "glfw3dll";
+else
+    libname = "glfw";
+end
+mex("-I"+glfwDir+"/include", "-L"+glfwDir+"/lib", "-l"+libname, "-outdir", "src/private", "src/private/glfwRegisterCallback.cpp");
 end
