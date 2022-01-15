@@ -39,12 +39,8 @@ workflows:
   test-matrix:
     jobs:
       - test:
-          matrix:
-            parameters:
-              executor: linux-2004
-              matlab-release: latest
+          executor: linux-2004
+          matlab-release: latest
       - test:
-          matrix:
-            parameters:
-              executor: linux-1604
-              matlab-release: R2020a
+          executor: linux-1604
+          matlab-release: R2020a
