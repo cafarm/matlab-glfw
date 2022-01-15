@@ -2,13 +2,10 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@0
   codecov: codecov/codecov@3
-  win: circleci/windows@2
 executors:
-  linux: &linux-executor
+  linux:
     machine:
       image: ubuntu-2004:202111-02
-  windows:
-    win/default
 jobs:
   test:
     parameters:
@@ -37,11 +34,7 @@ jobs:
           command: build ci
       - store_test_results:
           path: results
-      - when:
-          condition:
-            equal: [*linux-executor, <<parameters.executor>>]
-          steps:
-            - codecov/upload
+      - codecov/upload
 workflows:
   test-matrix:
     jobs:
@@ -50,8 +43,3 @@ workflows:
             parameters:
               executor: [linux]
               matlab-release: ["R2020a", "latest"]
-      - test:
-          matrix:
-            parameters:
-              executor: [windows]
-              matlab-release: ["R2021a", "latest"]
