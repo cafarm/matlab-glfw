@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@0
   codecov: codecov/codecov@1
-  windows: circleci/windows@2
+  win: circleci/windows@2
 executors:
   linux: &linux-executor
     machine:
@@ -40,12 +40,12 @@ jobs:
 workflows:
   test-matrix:
     jobs:
-      - test-unix:
+      - test:
           matrix:
             parameters:
               executor: [linux, macos]
               matlab-release: ["R2020a", "latest"]
-      - test-windows:
+      - test:
           matrix:
             parameters:
               executor: [windows]
