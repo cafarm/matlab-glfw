@@ -40,6 +40,6 @@ workflows:
           executor: linux-2004
           matlab-release: latest
       - test:
-          name: linux-R2020a
+          name: linux-R2020b
           executor: linux-2004
-          matlab-release: R2020a
+          matlab-release: R2020b
