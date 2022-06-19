@@ -39,10 +39,10 @@ if key == GLFW.KEY_ESCAPE && action == GLFW.PRESS
 end
 end
 
-function cursorEnterCallback(window, entered) %#ok<INUSL> 
+function cursorEnterCallback(window, entered) 
 if entered
-    disp("Cursor entered");
+    glfwSetWindowTitle(window, "Cursor entered window");
 else
-    disp("Cursor left");
+    glfwSetWindowTitle(window, "Cursor left window");
 end
 end
