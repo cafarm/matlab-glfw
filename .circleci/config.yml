@@ -5,10 +5,7 @@ orbs:
 executors:
   linux-2004:
     machine:
-      image: ubuntu-2004:202111-02
-  linux-1604:
-    machine:
-      image: ubuntu-1604:202104-01
+      image: ubuntu-2004:2022.04.1
 jobs:
   test:
     parameters:
@@ -43,6 +40,6 @@ workflows:
           executor: linux-2004
           matlab-release: latest
       - test:
-          name: linux-R2020a
-          executor: linux-1604
-          matlab-release: R2020a
+          name: linux-R2020b
+          executor: linux-2004
+          matlab-release: R2020b
