@@ -1,0 +1,70 @@
+From 2748cc88e41488f1b02bd7a1b436c2f3706cb1fc Mon Sep 17 00:00:00 2001
+From: Mark Cafaro <mark.cafaro@gmail.com>
+Date: Sun, 19 Jun 2022 11:26:04 -0400
+Subject: [PATCH] Add glfwGetMonitor function
+
+---
+ include/GLFW/glfw3.h | 25 +++++++++++++++++++++++++
+ src/monitor.c        | 10 ++++++++++
+ 2 files changed, 35 insertions(+)
+
+diff --git a/include/GLFW/glfw3.h b/include/GLFW/glfw3.h
+index d074de1..3b988dd 100644
+--- a/include/GLFW/glfw3.h
++++ b/include/GLFW/glfw3.h
+@@ -2027,6 +2027,31 @@ GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun callback);
+  */
+ GLFWAPI GLFWmonitor** glfwGetMonitors(int* count);
+ 
++/*! @brief Returns a currently connected monitor.
++ *
++ *  This function returns the handle for a currently connected monitor. It is
++ *  useful for interfacing with MATLAB which does not support the multilevel
++ *  pointer returned by glfwGetMonitors. If the index is out of range, this
++ *  function returns `NULL`.
++ *
++ *  @param[in] index The index of the monitor to return.
++ *  @return The monitor, or `NULL` if the index is out of range or
++ *  if an [error](@ref error_handling) occurred.
++ *
++ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
++ *
++ *  @thread_safety This function must only be called from the main thread.
++ *
++ *  @sa @ref monitor_monitors
++ *  @sa @ref glfwGetPrimaryMonitor
++ *  @sa @ref glfwGetMonitors
++ *
++ *  @since Added by patch.
++ *
++ *  @ingroup monitor
++ */
++GLFWAPI GLFWmonitor* glfwGetMonitor(int index);
++
+ /*! @brief Returns the primary monitor.
+  *
+  *  This function returns the primary monitor.  This is usually the monitor
+diff --git a/src/monitor.c b/src/monitor.c
+index 7341141..b4c7058 100644
+--- a/src/monitor.c
++++ b/src/monitor.c
+@@ -309,6 +309,16 @@ GLFWAPI GLFWmonitor** glfwGetMonitors(int* count)
+     return (GLFWmonitor**) _glfw.monitors;
+ }
+ 
++GLFWAPI GLFWmonitor* glfwGetMonitor(int index)
++{
++    _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
++
++    if (!_glfw.monitorCount || _glfw.monitorCount <= index)
++        return NULL;
++
++    return (GLFWmonitor*) _glfw.monitors[index];
++}
++
+ GLFWAPI GLFWmonitor* glfwGetPrimaryMonitor(void)
+ {
+     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
+-- 
+2.32.1 (Apple Git-133)
+
