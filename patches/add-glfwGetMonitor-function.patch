@@ -1,18 +1,18 @@
-From 2748cc88e41488f1b02bd7a1b436c2f3706cb1fc Mon Sep 17 00:00:00 2001
+From 10a0c05ae66a6b104246262c40813ac05b32a0a5 Mon Sep 17 00:00:00 2001
 From: Mark Cafaro <mark.cafaro@gmail.com>
-Date: Sun, 19 Jun 2022 11:26:04 -0400
+Date: Sun, 26 Jun 2022 09:49:06 -0400
 Subject: [PATCH] Add glfwGetMonitor function
 
 ---
- include/GLFW/glfw3.h | 25 +++++++++++++++++++++++++
- src/monitor.c        | 10 ++++++++++
- 2 files changed, 35 insertions(+)
+ include/GLFW/glfw3.h | 26 ++++++++++++++++++++++++++
+ src/monitor.c        | 20 ++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
 diff --git a/include/GLFW/glfw3.h b/include/GLFW/glfw3.h
-index d074de1..3b988dd 100644
+index d074de1..50ca8f5 100644
 --- a/include/GLFW/glfw3.h
 +++ b/include/GLFW/glfw3.h
-@@ -2027,6 +2027,31 @@ GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun callback);
+@@ -2027,6 +2027,32 @@ GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun callback);
   */
  GLFWAPI GLFWmonitor** glfwGetMonitors(int* count);
  
@@ -27,7 +27,8 @@ index d074de1..3b988dd 100644
 + *  @return The monitor, or `NULL` if the index is out of range or
 + *  if an [error](@ref error_handling) occurred.
 + *
-+ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
++ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref 
++ *  GLFW_INVALID_VALUE.
 + *
 + *  @thread_safety This function must only be called from the main thread.
 + *
@@ -45,19 +46,29 @@ index d074de1..3b988dd 100644
   *
   *  This function returns the primary monitor.  This is usually the monitor
 diff --git a/src/monitor.c b/src/monitor.c
-index 7341141..b4c7058 100644
+index 7341141..8fbaed0 100644
 --- a/src/monitor.c
 +++ b/src/monitor.c
-@@ -309,6 +309,16 @@ GLFWAPI GLFWmonitor** glfwGetMonitors(int* count)
+@@ -309,6 +309,26 @@ GLFWAPI GLFWmonitor** glfwGetMonitors(int* count)
      return (GLFWmonitor**) _glfw.monitors;
  }
  
 +GLFWAPI GLFWmonitor* glfwGetMonitor(int index)
 +{
++    assert(index >= 0);
++
 +    _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
 +
-+    if (!_glfw.monitorCount || _glfw.monitorCount <= index)
++    if (!_glfw.monitorCount)
 +        return NULL;
++
++    if (index < 0 || index >= _glfw.monitorCount)
++    {
++        _glfwInputError(GLFW_INVALID_VALUE, 
++                        "Invalid monitor index %i",
++                        index);
++        return NULL;
++    }
 +
 +    return (GLFWmonitor*) _glfw.monitors[index];
 +}
