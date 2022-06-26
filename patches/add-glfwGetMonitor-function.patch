@@ -27,7 +27,7 @@ index d074de1..50ca8f5 100644
 + *  @return The monitor, or `NULL` if the index is out of range or
 + *  if an [error](@ref error_handling) occurred.
 + *
-+ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref 
++ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
 + *  GLFW_INVALID_VALUE.
 + *
 + *  @thread_safety This function must only be called from the main thread.
@@ -64,7 +64,7 @@ index 7341141..8fbaed0 100644
 +
 +    if (index < 0 || index >= _glfw.monitorCount)
 +    {
-+        _glfwInputError(GLFW_INVALID_VALUE, 
++        _glfwInputError(GLFW_INVALID_VALUE,
 +                        "Invalid monitor index %i",
 +                        index);
 +        return NULL;
