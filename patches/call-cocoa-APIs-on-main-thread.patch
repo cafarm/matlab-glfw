@@ -1,6 +1,6 @@
-From 5bdf2fceb4baf5607e6913c8e16dd00394603169 Mon Sep 17 00:00:00 2001
+From 173d1cbd3b90f13d907d2e2c2977a319a3f083f2 Mon Sep 17 00:00:00 2001
 From: Mark Cafaro <mark.cafaro@gmail.com>
-Date: Sun, 27 Jun 2021 22:38:16 -0400
+Date: Sat, 20 Aug 2022 10:59:19 -0400
 Subject: [PATCH] Call cocoa APIs on main thread
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH] Call cocoa APIs on main thread
  2 files changed, 621 insertions(+), 48 deletions(-)
 
 diff --git a/src/cocoa_init.m b/src/cocoa_init.m
-index 209639e..14b4c3c 100644
+index f527312..d08e79f 100644
 --- a/src/cocoa_init.m
 +++ b/src/cocoa_init.m
-@@ -495,7 +495,7 @@ - (void)applicationDidHide:(NSNotification *)notification
+@@ -503,7 +503,7 @@ - (void)applicationDidHide:(NSNotification *)notification
  //////                       GLFW platform API                      //////
  //////////////////////////////////////////////////////////////////////////
  
@@ -21,7 +21,7 @@ index 209639e..14b4c3c 100644
  {
      @autoreleasepool {
  
-@@ -565,7 +565,20 @@ int _glfwPlatformInit(void)
+@@ -573,7 +573,20 @@ int _glfwPlatformInit(void)
      } // autoreleasepool
  }
  
@@ -43,7 +43,7 @@ index 209639e..14b4c3c 100644
  {
      @autoreleasepool {
  
-@@ -612,6 +625,17 @@ void _glfwPlatformTerminate(void)
+@@ -622,6 +635,17 @@ void _glfwPlatformTerminate(void)
      } // autoreleasepool
  }
  
@@ -62,7 +62,7 @@ index 209639e..14b4c3c 100644
  {
      return _GLFW_VERSION_NUMBER " Cocoa NSGL EGL OSMesa"
 diff --git a/src/cocoa_window.m b/src/cocoa_window.m
-index 9fa72a6..82ee44d 100644
+index bbab6c4..8666ae3 100644
 --- a/src/cocoa_window.m
 +++ b/src/cocoa_window.m
 @@ -895,7 +895,7 @@ float _glfwTransformYNS(float y)
@@ -74,7 +74,7 @@ index 9fa72a6..82ee44d 100644
                                const _GLFWwndconfig* wndconfig,
                                const _GLFWctxconfig* ctxconfig,
                                const _GLFWfbconfig* fbconfig)
-@@ -950,7 +950,23 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
+@@ -965,7 +965,23 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
      } // autoreleasepool
  }
  
@@ -99,7 +99,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -981,7 +997,18 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
+@@ -996,7 +1012,18 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
      } // autoreleasepool
  }
  
@@ -119,7 +119,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      NSString* string = @(title);
-@@ -992,13 +1019,24 @@ void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
+@@ -1007,13 +1034,24 @@ void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
      } // autoreleasepool
  }
  
@@ -145,7 +145,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1013,7 +1051,18 @@ void _glfwPlatformGetWindowPos(_GLFWwindow* window, int* xpos, int* ypos)
+@@ -1028,7 +1066,18 @@ void _glfwPlatformGetWindowPos(_GLFWwindow* window, int* xpos, int* ypos)
      } // autoreleasepool
  }
  
@@ -165,7 +165,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1025,7 +1074,18 @@ void _glfwPlatformSetWindowPos(_GLFWwindow* window, int x, int y)
+@@ -1040,7 +1089,18 @@ void _glfwPlatformSetWindowPos(_GLFWwindow* window, int x, int y)
      } // autoreleasepool
  }
  
@@ -185,7 +185,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1039,7 +1099,18 @@ void _glfwPlatformGetWindowSize(_GLFWwindow* window, int* width, int* height)
+@@ -1054,7 +1114,18 @@ void _glfwPlatformGetWindowSize(_GLFWwindow* window, int* width, int* height)
      } // autoreleasepool
  }
  
@@ -205,7 +205,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1061,7 +1132,18 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
+@@ -1076,7 +1147,18 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
      } // autoreleasepool
  }
  
@@ -225,7 +225,7 @@ index 9fa72a6..82ee44d 100644
                                        int minwidth, int minheight,
                                        int maxwidth, int maxheight)
  {
-@@ -1080,7 +1162,20 @@ void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
+@@ -1095,7 +1177,20 @@ void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
      } // autoreleasepool
  }
  
@@ -247,7 +247,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      if (numer == GLFW_DONT_CARE || denom == GLFW_DONT_CARE)
-@@ -1090,7 +1185,18 @@ void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom
+@@ -1105,7 +1200,18 @@ void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom
      } // autoreleasepool
  }
  
@@ -267,7 +267,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1105,7 +1211,18 @@ void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* heigh
+@@ -1120,7 +1226,18 @@ void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* heigh
      } // autoreleasepool
  }
  
@@ -287,7 +287,7 @@ index 9fa72a6..82ee44d 100644
                                       int* left, int* top,
                                       int* right, int* bottom)
  {
-@@ -1128,7 +1245,20 @@ void _glfwPlatformGetWindowFrameSize(_GLFWwindow* window,
+@@ -1143,7 +1260,20 @@ void _glfwPlatformGetWindowFrameSize(_GLFWwindow* window,
      } // autoreleasepool
  }
  
@@ -309,7 +309,7 @@ index 9fa72a6..82ee44d 100644
                                          float* xscale, float* yscale)
  {
      @autoreleasepool {
-@@ -1144,14 +1274,37 @@ void _glfwPlatformGetWindowContentScale(_GLFWwindow* window,
+@@ -1159,14 +1289,37 @@ void _glfwPlatformGetWindowContentScale(_GLFWwindow* window,
      } // autoreleasepool
  }
  
@@ -349,7 +349,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      if ([window->ns.object isMiniaturized])
-@@ -1161,7 +1314,18 @@ void _glfwPlatformRestoreWindow(_GLFWwindow* window)
+@@ -1176,7 +1329,18 @@ void _glfwPlatformRestoreWindow(_GLFWwindow* window)
      } // autoreleasepool
  }
  
@@ -369,7 +369,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      if (![window->ns.object isZoomed])
-@@ -1169,28 +1333,72 @@ void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
+@@ -1184,28 +1348,72 @@ void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
      } // autoreleasepool
  }
  
@@ -446,7 +446,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      // Make us the active application
-@@ -1202,7 +1410,18 @@ void _glfwPlatformFocusWindow(_GLFWwindow* window)
+@@ -1217,7 +1425,18 @@ void _glfwPlatformFocusWindow(_GLFWwindow* window)
      } // autoreleasepool
  }
  
@@ -466,7 +466,7 @@ index 9fa72a6..82ee44d 100644
                                     _GLFWmonitor* monitor,
                                     int xpos, int ypos,
                                     int width, int height,
-@@ -1295,35 +1514,102 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
+@@ -1345,28 +1564,82 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
      } // autoreleasepool
  }
  
@@ -552,7 +552,8 @@ index 9fa72a6..82ee44d 100644
 +int _glfwPlatformWindowMaximizedUnsafe(_GLFWwindow* window)
  {
      @autoreleasepool {
-     return [window->ns.object isZoomed];
+ 
+@@ -1378,7 +1651,20 @@ int _glfwPlatformWindowMaximized(_GLFWwindow* window)
      } // autoreleasepool
  }
  
@@ -574,7 +575,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1341,21 +1627,58 @@ int _glfwPlatformWindowHovered(_GLFWwindow* window)
+@@ -1396,14 +1682,40 @@ int _glfwPlatformWindowHovered(_GLFWwindow* window)
      } // autoreleasepool
  }
  
@@ -616,7 +617,8 @@ index 9fa72a6..82ee44d 100644
 +void _glfwPlatformSetWindowResizableUnsafe(_GLFWwindow* window, GLFWbool enabled)
  {
      @autoreleasepool {
-     [window->ns.object setStyleMask:getStyleMask(window)];
+ 
+@@ -1427,7 +1739,18 @@ void _glfwPlatformSetWindowResizable(_GLFWwindow* window, GLFWbool enabled)
      } // autoreleasepool
  }
  
@@ -635,8 +637,8 @@ index 9fa72a6..82ee44d 100644
 +void _glfwPlatformSetWindowDecoratedUnsafe(_GLFWwindow* window, GLFWbool enabled)
  {
      @autoreleasepool {
-     [window->ns.object setStyleMask:getStyleMask(window)];
-@@ -1363,7 +1686,18 @@ void _glfwPlatformSetWindowDecorated(_GLFWwindow* window, GLFWbool enabled)
+ 
+@@ -1449,7 +1772,18 @@ void _glfwPlatformSetWindowDecorated(_GLFWwindow* window, GLFWbool enabled)
      } // autoreleasepool
  }
  
@@ -656,7 +658,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      if (enabled)
-@@ -1373,20 +1707,55 @@ void _glfwPlatformSetWindowFloating(_GLFWwindow* window, GLFWbool enabled)
+@@ -1459,20 +1793,55 @@ void _glfwPlatformSetWindowFloating(_GLFWwindow* window, GLFWbool enabled)
      } // autoreleasepool
  }
  
@@ -714,7 +716,7 @@ index 9fa72a6..82ee44d 100644
  void _glfwPlatformSetRawMouseMotion(_GLFWwindow *window, GLFWbool enabled)
  {
  }
-@@ -1396,7 +1765,7 @@ GLFWbool _glfwPlatformRawMouseMotionSupported(void)
+@@ -1482,7 +1851,7 @@ GLFWbool _glfwPlatformRawMouseMotionSupported(void)
      return GLFW_FALSE;
  }
  
@@ -723,7 +725,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1418,7 +1787,18 @@ void _glfwPlatformPollEvents(void)
+@@ -1504,7 +1873,18 @@ void _glfwPlatformPollEvents(void)
      } // autoreleasepool
  }
  
@@ -743,7 +745,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1439,7 +1819,18 @@ void _glfwPlatformWaitEvents(void)
+@@ -1525,7 +1905,18 @@ void _glfwPlatformWaitEvents(void)
      } // autoreleasepool
  }
  
@@ -763,7 +765,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1459,7 +1850,18 @@ void _glfwPlatformWaitEventsTimeout(double timeout)
+@@ -1545,7 +1936,18 @@ void _glfwPlatformWaitEventsTimeout(double timeout)
      } // autoreleasepool
  }
  
@@ -783,7 +785,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1480,7 +1882,18 @@ void _glfwPlatformPostEmptyEvent(void)
+@@ -1566,7 +1968,18 @@ void _glfwPlatformPostEmptyEvent(void)
      } // autoreleasepool
  }
  
@@ -803,7 +805,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1496,7 +1909,18 @@ void _glfwPlatformGetCursorPos(_GLFWwindow* window, double* xpos, double* ypos)
+@@ -1582,7 +1995,18 @@ void _glfwPlatformGetCursorPos(_GLFWwindow* window, double* xpos, double* ypos)
      } // autoreleasepool
  }
  
@@ -823,7 +825,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1527,7 +1951,18 @@ void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
+@@ -1618,7 +2042,18 @@ void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
      } // autoreleasepool
  }
  
@@ -843,7 +845,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      if (_glfwPlatformWindowFocused(window))
-@@ -1535,7 +1970,18 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
+@@ -1626,7 +2061,18 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
      } // autoreleasepool
  }
  
@@ -863,7 +865,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1584,12 +2030,25 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
+@@ -1675,12 +2121,25 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
      } // autoreleasepool
  }
  
@@ -890,7 +892,7 @@ index 9fa72a6..82ee44d 100644
                                const GLFWimage* image,
                                int xhot, int yhot)
  {
-@@ -1633,7 +2092,22 @@ int _glfwPlatformCreateCursor(_GLFWcursor* cursor,
+@@ -1724,7 +2183,22 @@ int _glfwPlatformCreateCursor(_GLFWcursor* cursor,
      } // autoreleasepool
  }
  
@@ -914,7 +916,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1663,7 +2137,20 @@ int _glfwPlatformCreateStandardCursor(_GLFWcursor* cursor, int shape)
+@@ -1754,7 +2228,20 @@ int _glfwPlatformCreateStandardCursor(_GLFWcursor* cursor, int shape)
      } // autoreleasepool
  }
  
@@ -936,7 +938,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      if (cursor->ns.object)
-@@ -1671,7 +2158,18 @@ void _glfwPlatformDestroyCursor(_GLFWcursor* cursor)
+@@ -1762,7 +2249,18 @@ void _glfwPlatformDestroyCursor(_GLFWcursor* cursor)
      } // autoreleasepool
  }
  
@@ -956,7 +958,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      if (cursorInContentArea(window))
-@@ -1679,7 +2177,18 @@ void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor)
+@@ -1770,7 +2268,18 @@ void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor)
      } // autoreleasepool
  }
  
@@ -976,7 +978,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
      NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-@@ -1688,7 +2197,18 @@ void _glfwPlatformSetClipboardString(const char* string)
+@@ -1779,7 +2288,18 @@ void _glfwPlatformSetClipboardString(const char* string)
      } // autoreleasepool
  }
  
@@ -996,7 +998,7 @@ index 9fa72a6..82ee44d 100644
  {
      @autoreleasepool {
  
-@@ -1717,6 +2237,19 @@ void _glfwPlatformSetClipboardString(const char* string)
+@@ -1808,6 +2328,19 @@ void _glfwPlatformSetClipboardString(const char* string)
      } // autoreleasepool
  }
  
@@ -1016,7 +1018,7 @@ index 9fa72a6..82ee44d 100644
  void _glfwPlatformGetRequiredInstanceExtensions(char** extensions)
  {
      if (_glfw.vk.KHR_surface && _glfw.vk.EXT_metal_surface)
-@@ -1738,7 +2271,7 @@ int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
+@@ -1829,7 +2362,7 @@ int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
      return GLFW_TRUE;
  }
  
@@ -1025,7 +1027,7 @@ index 9fa72a6..82ee44d 100644
                                            _GLFWwindow* window,
                                            const VkAllocationCallbacks* allocator,
                                            VkSurfaceKHR* surface)
-@@ -1829,6 +2362,22 @@ VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
+@@ -1920,6 +2453,22 @@ VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
      } // autoreleasepool
  }
  
@@ -1049,5 +1051,5 @@ index 9fa72a6..82ee44d 100644
  //////////////////////////////////////////////////////////////////////////
  //////                        GLFW native API                       //////
 -- 
-2.30.1 (Apple Git-130)
+2.32.1 (Apple Git-133)
 
