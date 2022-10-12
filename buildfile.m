@@ -4,6 +4,8 @@ plan = buildplan(localfunctions);
 plan("compile").Dependencies = "getdeps";
 [plan(["package","devPackage","test","cov","ci"]).Dependencies] = deal("compile");
 
+plan.DefaultTasks = "package";
+
 addpath("src");
 end
 
