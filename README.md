@@ -128,22 +128,22 @@ All C numeric types are automatically marshalled to and from MATLAB `double`.
 ## Development
 ### Test
 ```matlab
->> build test
+>> buildtool test
 ```
 
 ### Coverage
 ```matlab
->> build cov
+>> buildtool cov
 ```
 
 ### Package
 ```matlab
->> build package
+>> buildtool package
 ```
 
 ### Release
 ```matlab
->> build version
+>> buildtool version
 type (major|minor|patch): minor
 >> !git push origin main --follow-tags
 ```
