@@ -41,9 +41,9 @@ jobs:
         uses: matlab-actions/setup-matlab@v1
 
       - name: Compile GLFW and MEX binaries
-        uses: matlab-actions/run-command@v1
+        uses: matlab-actions/run-build@v1
         with:
-          command: build("compile")
+          tasks: compile
 
       - name: Store GLFW and MEX binaries
         uses: actions/upload-artifact@v2
@@ -74,9 +74,9 @@ jobs:
         uses: matlab-actions/setup-matlab@v1
 
       - name: Package toolbox
-        uses: matlab-actions/run-command@v1
+        uses: matlab-actions/run-build@v1
         with:
-          command: build("package", true)
+          tasks: package
 
       - name: Create release
         id: create_release
