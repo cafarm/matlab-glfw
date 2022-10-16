@@ -3,9 +3,9 @@ orbs:
   matlab: mathworks/matlab@0
   codecov: codecov/codecov@3
 executors:
-  linux-2204:
+  linux-2004:
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: ubuntu-2004:2022.07.1
 jobs:
   test:
     parameters:
@@ -37,9 +37,9 @@ workflows:
     jobs:
       - test:
           name: linux-latest
-          executor: linux-2204
+          executor: linux-2004
           matlab-release: latest
       - test:
           name: linux-R2022b
-          executor: linux-2204
+          executor: linux-2004
           matlab-release: R2022b
